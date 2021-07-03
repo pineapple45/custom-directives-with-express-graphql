@@ -20,6 +20,55 @@ interface UserLoginArgs {
   password: string;
 }
 
+export const listUsers = async () => {
+  try {
+    const users = await User.find();
+    return users.map((user: UserType) => {
+      return transformUser(user);
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUserById = async (args: { _id: string }) => {
+  try {
+    const user = await User.findById(args._id);
+    return transformUser(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const assignRole = async (args: {
+  role: Role;
+  assignedBy: string;
+  assignedUser: string;
+}) => {
+  try {
+    const assigny = await User.findById(args.assignedBy);
+    if (!assigny) {
+      throw new Error('The user who is assigning role is not present in db');
+    }
+
+    if (assigny._doc.role !== 'ADMIN') throw new Error('Unauthorised access');
+
+    const userToBeAssigned = await User.findById(args.assignedUser);
+    if (userToBeAssigned._doc.role === 'ADMIN')
+      throw new Error(`User is already assigned ${args.role} role`);
+
+    const updatedUser = await User.updateOne(
+      { _id: args.assignedUser },
+      { $set: { role: args.role } }
+    );
+
+    const result = await User.findById(args.assignedUser);
+    return transformUser(result);
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createUser = async (args: UserArgsType) => {
   const userInDb = await User.findOne({
     email: args.user.email,
@@ -43,6 +92,15 @@ export const createUser = async (args: UserArgsType) => {
   try {
     const result = await user.save();
     return transformUser(result);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteUser = async (_id: string) => {
+  try {
+    await User.findByIdAndDelete(_id);
+    return `user account removed successfully`;
   } catch (error) {
     throw error;
   }
