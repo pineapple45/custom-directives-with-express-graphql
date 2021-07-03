@@ -1,4 +1,7 @@
+import User from '../../models/User';
+import Post from '../../models/Post';
 import { UserType } from './users';
+import { PostType } from './posts';
 
 export const transformUser = (user: UserType) => {
   if (!user)
@@ -18,8 +21,38 @@ export const transformUser = (user: UserType) => {
     ...user,
     _id: user._id,
     password: null,
-    postList: [], // return empty array for now. we will add posts functionality in a bit
+    postList: postsByCreatorId.bind(this, user._id!),
     commentList: [], // return empty array for now. we will add comments functionality in a bit
     likeList: [], // return empty array for now. we will add likes functionality in a bit
   };
+};
+
+export const transformPost = (post: PostType) => {
+  return {
+    ...post,
+    _id: post._id,
+    creator: singleUser.bind(this, post.creatorId),
+    commentList: [], // return empty array for now. we will add comments functionality in a bit
+    likeList: [], // return empty array for now. we will add likes functionality in a bit
+  };
+};
+
+export const singleUser = async (userId: string) => {
+  try {
+    const user = await User.findById(userId);
+    return transformUser(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postsByCreatorId = async (creatorId: string) => {
+  try {
+    const posts = await Post.find({ creatorId: creatorId });
+    return posts.map((post: PostType) => {
+      return transformPost(post);
+    });
+  } catch (error) {
+    throw error;
+  }
 };
