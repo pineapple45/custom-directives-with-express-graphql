@@ -2,6 +2,7 @@ import User from '../../models/User';
 import Post from '../../models/Post';
 import { UserType } from './users';
 import { PostType } from './posts';
+import { CommentType } from './comments';
 
 export const transformUser = (user: UserType) => {
   if (!user)
@@ -37,6 +38,15 @@ export const transformPost = (post: PostType) => {
   };
 };
 
+export const transformComment = (comment: CommentType) => {
+  return {
+    ...comment,
+    _id: comment._id,
+    post: singlePost.bind(this, comment.postId),
+    creator: singleUser.bind(this, comment.creatorId),
+  };
+};
+
 export const singleUser = async (userId: string) => {
   try {
     const user = await User.findById(userId);
@@ -52,6 +62,15 @@ export const postsByCreatorId = async (creatorId: string) => {
     return posts.map((post: PostType) => {
       return transformPost(post);
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const singlePost = async (postId: string) => {
+  try {
+    const post = await Post.findById(postId);
+    return transformPost(post);
   } catch (error) {
     throw error;
   }
