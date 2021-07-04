@@ -1,5 +1,6 @@
 import User from '../../models/User';
 import Post from '../../models/Post';
+import Comment from '../../models/Comment';
 import { UserType } from './users';
 import { PostType } from './posts';
 import { CommentType } from './comments';
@@ -23,7 +24,7 @@ export const transformUser = (user: UserType) => {
     _id: user._id,
     password: null,
     postList: postsByCreatorId.bind(this, user._id!),
-    commentList: [], // return empty array for now. we will add comments functionality in a bit
+    commentList: commentsByCreatorId.bind(this, user._id!),
     likeList: [], // return empty array for now. we will add likes functionality in a bit
   };
 };
@@ -33,7 +34,7 @@ export const transformPost = (post: PostType) => {
     ...post,
     _id: post._id,
     creator: singleUser.bind(this, post.creatorId),
-    commentList: [], // return empty array for now. we will add comments functionality in a bit
+    commentList: commentsByCreatorId.bind(this, post.creatorId),
     likeList: [], // return empty array for now. we will add likes functionality in a bit
   };
 };
@@ -71,6 +72,28 @@ export const singlePost = async (postId: string) => {
   try {
     const post = await Post.findById(postId);
     return transformPost(post);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const commentsByPostId = async (postId: string) => {
+  try {
+    const comments = await Comment.find({ postId: postId });
+    return comments.map((comment: CommentType) => {
+      return transformComment(comment);
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const commentsByCreatorId = async (creatorId: string) => {
+  try {
+    const comments = await Comment.find({ creatorId: creatorId });
+    return comments.map((comment: CommentType) => {
+      return transformComment(comment);
+    });
   } catch (error) {
     throw error;
   }
