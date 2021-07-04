@@ -1,47 +1,37 @@
+//
 import { buildSchema } from 'graphql';
+import { addDirectiveResolveFunctionsToSchema } from 'graphql-directive';
+import { upperCase, isAuthenticated, hasAuthorisation } from '../directives';
+
+// import comparted schemas
+import * as postsGQLSchema from './posts';
+import * as commentsGQLSchema from './comments';
+import * as likesGQLSchema from './likes';
+import * as usersGQLSchema from './users';
+
+const types: string[] = [];
+const queries: string[] = [];
+const mutations: string[] = [];
+const subscriptions = [];
+const schemas = [
+  postsGQLSchema,
+  commentsGQLSchema,
+  likesGQLSchema,
+  usersGQLSchema,
+];
+
+schemas.forEach((schema) => {
+  types.push(schema.types);
+  queries.push(schema.queries);
+  mutations.push(schema.mutations);
+  subscriptions.push(schema.subscriptions);
+});
 
 const schema = buildSchema(`
 
-input PostInput {
-    image: String
-    title: String!
-    description: String
-    creatorId: ID!
-}
-
-type Post {
-    _id: ID!
-    image: String
-    title: String!
-    description: String
-    creator: User!
-    commentList: [Comment!]
-    likeList: [Like!]
-}
-
-input CommentInput {
-    text: String!
-    postId: ID!
-    creatorId: ID!
-}
-
-type Comment {
-    _id: ID!
-    text: String!
-    post: Post!
-    creator: User!
-}
-
-input LikeInput {
-    postId: ID!
-    creatorId: ID!
-}
-
-type Like {
-    _id: ID!
-    post: Post!
-    creator: User!
-}
+directive @upperCase on FIELD_DEFINITION | FIELD
+directive @isAuthenticated on FIELD_DEFINITION | FIELD
+directive @hasAuthorisation(roles: [Role!]) on FIELD_DEFINITION | FIELD
 
 enum Role {
     AUTH_USER
@@ -49,51 +39,15 @@ enum Role {
     MODERATOR
 }
 
-input UserInput {
-    username: String!
-    email: String!
-    password: String!
-}
+${types.join('\n')}
 
-type User {
-    _id: ID!
-    username: String! 
-    email: String!
-    password: String
-    role: Role!
-    postList: [Post!]
-    commentList: [Comment!]
-    likeList: [Like!]
-}
-
-type AuthData {
-    userId: ID!
-    token: String!
-    tokenExpiration: Int!
-}
 
 type RootQuery {
-  listUsers: [User!] 
-  getUserById(_id: ID!): User!
-  listPosts: [Post!]
-  getPostById(_id: ID!): Post!
-  listComments: [Comment!]
-  getCommentById(_id: ID!): Comment!
-  listLikes: [Like!]
-  getLikeById(_id: ID!): Like!
-  login(usernameOrEmail: String!, password: String!): AuthData!
+    ${queries.join('\n')}
 }
 
 type RootMutation {
-  createUser(user: UserInput): User
-  deleteUser(_id: ID!): String 
-  createPost(post: PostInput): Post 
-  deletePost(_id: ID!): String 
-  createComment(comment: CommentInput): Comment
-  deleteComment(_id: ID!): String 
-  createLike(like: LikeInput): Like
-  deleteLike(_id: ID!): String
-  assignRole(role: String! , assignedBy: ID!, assignedUser: ID!): User 
+${mutations.join('\n')}
 }
 
 schema {
@@ -101,5 +55,11 @@ schema {
   mutation: RootMutation
 }
 `);
+
+addDirectiveResolveFunctionsToSchema(schema, {
+  upperCase,
+  isAuthenticated,
+  hasAuthorisation,
+});
 
 export default schema;
