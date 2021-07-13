@@ -31,8 +31,8 @@ export const transformPost = (post: PostType) => {
     title: post.title,
     description: post.description,
     creator: singleUser.bind(this, post.creatorId),
-    commentList: [], // return empty array for now. we will add comments functionality in a bit
-    likeList: [], // return empty array for now. we will add likes functionality in a bit
+    commentList: commentsByPostId.bind(this, post._id!),
+    likeList: likesByPostId.bind(this, post._id!),
   };
 };
 
@@ -56,11 +56,12 @@ export const transformUser = (user: UserType) => {
     email: user.email,
     role: user.role,
     password: null,
-    postList: [], // return empty array for now. we will add posts functionality in a bit
-    commentList: [], // return empty array for now. we will add comments functionality in a bit
-    likeList: [], // return empty array for now. we will add likes functionality in a bit
+    postList: postsByCreatorId.bind(this, user._id!),
+    commentList: commentsByCreatorId.bind(this, user._id!),
+    likeList: likesByCreatorId.bind(this, user._id!),
   };
 };
+
 export const singleUser = async (userId: string) => {
   try {
     const user = await User.findById(userId);
