@@ -9,7 +9,6 @@ import { PostType } from './posts';
 
 export const transformLike = (like: LikeType) => {
   return {
-    ...like,
     _id: like._id,
     post: singlePost.bind(this, like.postId),
     creator: singleUser.bind(this, like.creatorId),
@@ -18,8 +17,8 @@ export const transformLike = (like: LikeType) => {
 
 export const transformComment = (comment: CommentType) => {
   return {
-    ...comment,
     _id: comment._id,
+    text: comment.text,
     post: singlePost.bind(this, comment.postId),
     creator: singleUser.bind(this, comment.creatorId),
   };
@@ -41,6 +40,7 @@ export const transformUser = (user: UserType) => {
       _id: 'deleted_user',
       email: 'deleted_user',
       username: 'deleted_user',
+      role: 'deleted_user',
       password: null,
       postList: [],
       commentList: [],
@@ -48,9 +48,10 @@ export const transformUser = (user: UserType) => {
     };
 
   return {
-    ...user,
     _id: user._id,
-    password: null,
+    username: user.username,
+    email: user.email,
+    role: user.role,
     postList: postsByCreatorId.bind(this, user._id!),
     commentList: commentsByCreatorId.bind(this, user._id!),
     likeList: likesByCreatorId.bind(this, user._id!),

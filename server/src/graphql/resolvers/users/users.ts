@@ -51,8 +51,6 @@ export const assignRole = async (args: {
       throw new Error('The user who is assigning role is not present in db');
     }
 
-    if (assigny._doc.role !== 'ADMIN') throw new Error('Unauthorised access');
-
     const userToBeAssigned = await User.findById(args.assignedUser);
     if (userToBeAssigned._doc.role === 'ADMIN')
       throw new Error(`User is already assigned ${args.role} role`);
