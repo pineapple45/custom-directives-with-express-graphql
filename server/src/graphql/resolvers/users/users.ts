@@ -149,7 +149,13 @@ const passwordCheck = async (args: UserLoginArgs, user: UserType) => {
       expiresIn: '1h',
     }
   );
-  return { userId: user._id, token: token, tokenExpiration: 1 };
+  return {
+    userId: user._id,
+    token: token,
+    tokenExpiration: 1,
+    username: user.username,
+    role: user.role,
+  };
 };
 
 const checkIfValIsUsernameOrEmail = (usernameOrEmail: string) => {
