@@ -71,47 +71,19 @@ const useStyles = makeStyles((theme) => ({
 const Admin: React.FC = () => {
   const { isLoggedIn, authState } = useAuth();
 
-  const {
-    loading: loadingPosts,
-    error: errorOnLoadingPosts,
-    data: postsData,
-  } = useQuery(listPostsQuery);
+  const { loading: loadingPosts, data: postsData } = useQuery(listPostsQuery);
 
-  const [
-    createPost,
-    {
-      data: createPostData,
-      loading: postCreationInProgress,
-      error: errorOnPostCreation,
-    },
-  ] = useMutation(createPostMutation);
+  const [createPost, { error: errorOnPostCreation }] =
+    useMutation(createPostMutation);
 
-  const [
-    deletePost,
-    {
-      data: deletePostData,
-      loading: postDeletionProgress,
-      error: errorOnPostDeletion,
-    },
-  ] = useMutation(deletePostMutation);
+  const [deletePost, { error: errorOnPostDeletion }] =
+    useMutation(deletePostMutation);
 
-  const [
-    createLike,
-    {
-      data: createlikeData,
-      loading: likeCreationInProgress,
-      error: errorOnLikeCreation,
-    },
-  ] = useMutation(createLikeMutation);
+  const [createLike, { error: errorOnLikeCreation }] =
+    useMutation(createLikeMutation);
 
-  const [
-    deleteLike,
-    {
-      data: deleteLikeData,
-      loading: likeDeletionInProgress,
-      error: errorOnLikeDeletion,
-    },
-  ] = useMutation(deleteLikeMutation);
+  const [deleteLike, { error: errorOnLikeDeletion }] =
+    useMutation(deleteLikeMutation);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [inputState, setInputState] = useState({
@@ -236,15 +208,17 @@ const Admin: React.FC = () => {
   };
 
   const ifLoggedInUsersLikeExists = (post: any) => {
-    const like = post.likeList.find((like: any) => {
-      if (
-        authState.userId &&
-        like.post._id === post._id &&
-        like.creator._id === authState.userId
-      ) {
-        return like;
-      }
-    });
+    const like =
+      post.likeList &&
+      post.likeList.forEach((like: any) => {
+        if (
+          authState.userId &&
+          like.post._id === post._id &&
+          like.creator._id === authState.userId
+        ) {
+          return like;
+        }
+      });
 
     return like;
   };
@@ -264,7 +238,7 @@ const Admin: React.FC = () => {
               gutterBottom
             >
               <Box display="flex" justifyContent="center" alignItems="center">
-                <img src={Icon} width="100px" />
+                <img src={Icon} alt="site-icon" width="100px" />
                 <span>Photos Admin</span>
               </Box>
             </Typography>
@@ -392,7 +366,7 @@ const Admin: React.FC = () => {
                               onClick={() =>
                                 removeLikeHandler(
                                   ifLoggedInUsersLikeExists(post)._id,
-                                  post._id,
+                                  post._id
                                 )
                               }
                             />

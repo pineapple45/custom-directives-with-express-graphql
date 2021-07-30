@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
   CircularProgress,
   Grid,
   TextField,
-  ListItem,
   ListItemText,
   Button,
   Paper,
@@ -23,14 +22,13 @@ const Post = () => {
   const { isLoggedIn, authState } = useAuth();
   const { id }: { id: string } = useParams();
 
-  const {
-    loading: loadingPostById,
-    error: errorOnLoadingPostById,
-    data: postById,
-  } = useQuery(getPostByIdQuery, { variables: { _id: id } });
+  const { loading: loadingPostById, data: postById } = useQuery(
+    getPostByIdQuery,
+    { variables: { _id: id } }
+  );
 
   const [createComment, { loading: commentAdditionInProgress }] = useMutation(
-    createCommentMutation,
+    createCommentMutation
   );
 
   const [comment, setComment] = useState('');

@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
-  }),
+  })
 );
 
 const Navbar = () => {
@@ -56,7 +56,7 @@ const Navbar = () => {
   return (
     <AppBar position="static" color="transparent">
       <Toolbar>
-        <img src={Icon} width="50px" />
+        <img src={Icon} alt="site-icon" width="50px" />
         <Typography
           variant="h6"
           className={classes.title}

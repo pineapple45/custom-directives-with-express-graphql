@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect, RouteProps, withRouter } from 'react-router-dom';
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 
 export enum Role {

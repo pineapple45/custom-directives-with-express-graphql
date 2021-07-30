@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   CircularProgress,
@@ -32,23 +32,13 @@ const Post: React.FC = () => {
     data: postByIdData,
   } = useQuery(getPostByIdQuery, { variables: { _id: id } });
 
-  const [
-    deleteComment,
-    {
-      data: deleteCommentData,
-      loading: deletingComment,
-      error: errorOnDeleteComment,
-    },
-  ] = useMutation(deleteCommentMutation);
+  const [deleteComment, { error: errorOnDeleteComment }] = useMutation(
+    deleteCommentMutation
+  );
 
-  const [
-    createComment,
-    {
-      data: commentData,
-      loading: commentInProgress,
-      error: errorOnCommentAddition,
-    },
-  ] = useMutation(createCommentMutation);
+  const [createComment, { loading: commentInProgress }] = useMutation(
+    createCommentMutation
+  );
 
   const [comment, setComment] = useState('');
   const [message, setMessage] = useMessage({

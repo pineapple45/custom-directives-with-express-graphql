@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -150,17 +150,12 @@ const Album: React.FC = () => {
 
   if (!errorOnListingPosts?.networkError) {
     errorMessage = errorOnListingPosts?.message;
-    // setMessage({
-    //   toShow: true,
-    //   variant: 'error',
-    //   messageText: errorOnListingPosts?.message!,
-    // });
   }
 
   const ifLoggedInUsersLikeExists = (post: any) => {
     const like =
       post.likeList &&
-      post.likeList.find((like: any) => {
+      post.likeList.forEach((like: any) => {
         if (
           authState.userId &&
           like.post._id === post._id &&
@@ -199,7 +194,7 @@ const Album: React.FC = () => {
               gutterBottom
             >
               <Box display="flex" justifyContent="center" alignItems="center">
-                <img src={Icon} width="100px" />
+                <img src={Icon} alt="site-icon" width="100px" />
                 <span>Photos</span>
               </Box>
             </Typography>
@@ -247,7 +242,7 @@ const Album: React.FC = () => {
                               onClick={() =>
                                 removeLikeHandler(
                                   ifLoggedInUsersLikeExists(post)._id,
-                                  post._id,
+                                  post._id
                                 )
                               }
                             />

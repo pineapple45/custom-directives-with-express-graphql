@@ -4,22 +4,10 @@ import {
   NormalizedCacheObject,
   createHttpLink,
 } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { onError, ErrorHandler } from '@apollo/client/link/error';
-
-import Message from '../components/Message';
+import { onError } from '@apollo/client/link/error';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 const isBrowser: boolean = (process.env as any).browser;
-
-// Polyfill fetch() on the server (used by apollo-client)
-// if (!isBrowser) {
-//   (global as any).fetch = fetch;
-// }
-
-// interface Options {
-//   getToken: () => string;
-// }
 
 function create(initialState: any) {
   const token =
@@ -63,16 +51,6 @@ function create(initialState: any) {
       console.log(`[Network error]: ${networkError}`);
     }
   });
-
-  //   const authLink = setContext((_, { headers }: any) => {
-  //     const token = getToken();
-  //     return {
-  //       headers: {
-  //         ...headers,
-  //         cookie: token ? `qid=${token}` : '',
-  //       },
-  //     };
-  //   });
 
   // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({

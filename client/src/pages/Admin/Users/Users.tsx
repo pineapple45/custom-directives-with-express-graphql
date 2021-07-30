@@ -25,31 +25,16 @@ import { listUsersQuery } from '../../../graphql/queries';
 import { useMutation, useQuery } from '@apollo/client';
 
 const Users: React.FC = () => {
-  const { authState, isLoggedIn } = useAuth();
+  const { authState } = useAuth();
 
-  const {
-    data: usersList,
-    loading: loadingUsersList,
-    error: errorOnLoadingUsersList,
-  } = useQuery(listUsersQuery);
+  const { data: usersList, loading: loadingUsersList } =
+    useQuery(listUsersQuery);
 
-  const [
-    deleteUser,
-    {
-      data: deletedUserData,
-      loading: userDeletionInProgress,
-      error: errorOnDeletingUser,
-    },
-  ] = useMutation(deleteUserMutation);
+  const [deleteUser, { error: errorOnDeletingUser }] =
+    useMutation(deleteUserMutation);
 
-  const [
-    assignRole,
-    {
-      data: assignedRoleData,
-      loading: assigningUserRole,
-      error: errorOnAssigningUserRole,
-    },
-  ] = useMutation(assignRoleMutation);
+  const [assignRole, { error: errorOnAssigningUserRole }] =
+    useMutation(assignRoleMutation);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('');

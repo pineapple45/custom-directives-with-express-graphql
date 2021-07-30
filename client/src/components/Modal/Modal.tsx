@@ -8,21 +8,6 @@ interface ModalType {
   children: any;
 }
 
-// function rand() {
-//   return Math.round(Math.random() * 20) - 10;
-// }
-
-// function getModalStyle() {
-//   const top = 50 + rand();
-//   const left = 50 + rand();
-
-//   return {
-//     top: `${top}%`,
-//     left: `${left}%`,
-//     transform: `translate(-${top}%, -${left}%)`,
-//   };
-// }
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -40,8 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Modal: React.FC<ModalType> = ({ handleClose, open, children }) => {
   const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
-  // const [modalStyle] = React.useState(getModalStyle);
 
   return (
     <div>

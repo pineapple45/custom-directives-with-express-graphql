@@ -83,7 +83,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isLoggedIn()) history.push('/');
-  }, []);
+  }, [history, isLoggedIn]);
 
   useEffect(() => {
     if (loginData !== undefined) {
@@ -94,23 +94,18 @@ const Login = () => {
 
       localStorage.setItem('userData', JSON.stringify(loginData.login));
     }
-  }, [loginData]);
+  }, [loginData, setAuthState, authState]);
 
   let errorMessage: string | undefined;
 
   if (!errorOnLogin?.networkError) {
     errorMessage = errorOnLogin?.message;
     console.log(errorOnLogin);
-    // setMessage({
-    //   toShow: true,
-    //   variant: 'error',
-    //   messageText: errorOnListingPosts?.message!,
-    // });
   }
 
   useEffect(() => {
     if (isLoggedIn()) history.push('/');
-  }, [isLoggedIn]);
+  }, [isLoggedIn, history]);
 
   return (
     <Container component="main" maxWidth="xs">

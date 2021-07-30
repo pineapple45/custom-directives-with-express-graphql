@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import Album from './pages/Album';
 import Error404 from './pages/404/404';
 import Login from './pages/Login';

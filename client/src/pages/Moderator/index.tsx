@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   CssBaseline,
@@ -27,7 +27,6 @@ import {
   createLikeMutation,
   deleteLikeMutation,
   deletePostMutation,
-  createPostMutation,
 } from '../../graphql/mutations';
 import { getPostByIdQuery, listPostsQuery } from '../../graphql/queries';
 import { useAuth } from '../../context/AuthProvider';
@@ -68,45 +67,16 @@ const useStyles = makeStyles((theme) => ({
 const Moderator: React.FC = () => {
   const { isLoggedIn, authState } = useAuth();
 
-  const {
-    loading: loadingPosts,
-    error: errorOnLoadingPosts,
-    data: postsData,
-  } = useQuery(listPostsQuery);
+  const { loading: loadingPosts, data: postsData } = useQuery(listPostsQuery);
 
-  const [
-    deletePost,
-    {
-      data: deletePostData,
-      loading: postDeletionProgress,
-      error: errorOnPostDeletion,
-    },
-  ] = useMutation(deletePostMutation);
+  const [deletePost, { error: errorOnPostDeletion }] =
+    useMutation(deletePostMutation);
 
-  const [
-    createLike,
-    {
-      data: createlikeData,
-      loading: likeCreationInProgress,
-      error: errorOnLikeCreation,
-    },
-  ] = useMutation(createLikeMutation);
+  const [createLike, { error: errorOnLikeCreation }] =
+    useMutation(createLikeMutation);
 
-  const [
-    deleteLike,
-    {
-      data: deleteLikeData,
-      loading: likeDeletionInProgress,
-      error: errorOnLikeDeletion,
-    },
-  ] = useMutation(deleteLikeMutation);
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [inputState, setInputState] = useState({
-    title: '',
-    description: '',
-    image: '',
-  });
+  const [deleteLike, { error: errorOnLikeDeletion }] =
+    useMutation(deleteLikeMutation);
 
   const [message, setMessage] = useMessage({
     messageText: '',
@@ -116,13 +86,6 @@ const Moderator: React.FC = () => {
 
   const classes = useStyles();
   const history = useHistory();
-
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState({
-      ...inputState,
-      [event.target.name]: event.target.value,
-    });
-  };
 
   const checkIfUserIsNotAuthenticated = () => {
     if (!isLoggedIn) {
@@ -189,19 +152,20 @@ const Moderator: React.FC = () => {
   };
 
   const ifLoggedInUsersLikeExists = (post: any) => {
-    const like = post.likeList.find((like: any) => {
-      if (
-        authState.userId &&
-        like.post._id === post._id &&
-        like.creator._id === authState.userId
-      ) {
-        return like;
-      }
-    });
+    const like =
+      post.likeList &&
+      post.likeList.forEach((like: any) => {
+        if (
+          authState.userId &&
+          like.post._id === post._id &&
+          like.creator._id === authState.userId
+        ) {
+          return like;
+        }
+      });
 
     return like;
   };
-
   return (
     <Layout>
       <CssBaseline />
@@ -217,7 +181,7 @@ const Moderator: React.FC = () => {
               gutterBottom
             >
               <Box display="flex" justifyContent="center" alignItems="center">
-                <img src={Icon} width="100px" />
+                <img src={Icon} alt="site-icon" width="100px" />
                 <span>Photos Moderator</span>
               </Box>{' '}
             </Typography>
@@ -267,7 +231,7 @@ const Moderator: React.FC = () => {
                               onClick={() =>
                                 removeLikeHandler(
                                   ifLoggedInUsersLikeExists(post)._id,
-                                  post._id,
+                                  post._id
                                 )
                               }
                             />
