@@ -3,7 +3,8 @@ const path = require('path');
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    src: '/',
+    public: { url: '/', static: true },
+    src: { url: '/dist' },
   },
   plugins: [
     '@snowpack/plugin-react-refresh',
@@ -35,6 +36,5 @@ module.exports = {
   buildOptions: {
     /* ... */
     baseUrl: '/custom-directives-with-express-graphql',
-    out: './docs',
   },
 };
