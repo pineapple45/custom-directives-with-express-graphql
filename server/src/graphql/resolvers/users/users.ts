@@ -2,6 +2,7 @@ import User, { Role } from '../../../models/User';
 import { transformUser } from '../utils';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { GraphQLError } from 'graphql';
 
 interface UserArgsType {
   user: UserType;
@@ -140,7 +141,7 @@ export const login = async (args: UserLoginArgs) => {
 const passwordCheck = async (args: UserLoginArgs, user: UserType) => {
   const isEqual = await bcrypt.compare(args.password, user.password);
   if (!isEqual) {
-    throw new Error('Password is incorrect!');
+    throw new GraphQLError('Password is incorrect!');
   }
   const token = jwt.sign(
     { userId: user._id, email: user.email, role: user.role },

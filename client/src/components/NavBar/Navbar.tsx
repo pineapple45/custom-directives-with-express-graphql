@@ -96,7 +96,6 @@ const Navbar = () => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
               {authState && authState.role === Role.ADMIN && (
                 <MenuItem onClick={() => history.push(`/admin`)}>
                   Admin Console

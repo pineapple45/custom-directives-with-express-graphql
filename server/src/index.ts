@@ -20,7 +20,7 @@ app.use(cors());
 //   next();
 // });
 
-app.use('/graphql', (req, res) => {
+app.use('/graphql', (req: Request, res: Response) => {
   return graphqlHTTP({
     schema: schema,
     rootValue: rootResolver,

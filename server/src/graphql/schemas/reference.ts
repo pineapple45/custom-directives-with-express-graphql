@@ -81,7 +81,7 @@ type AuthData {
 type RootQuery {
   listUsers: [User!] @hasAuthorisation(roles: [ADMIN])
   getUserById(_id: ID!): User!
-  listPosts: [Post!]
+  listPosts: [Post]
   getPostById(_id: ID!): Post!
   listComments: [Comment!]
   getCommentById(_id: ID!): Comment!

@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const classes = useStyles();
   const history = useHistory();
-
   const { authState, setAuthState, isLoggedIn } = useAuth();
 
   const [
@@ -95,15 +94,19 @@ const Login = () => {
 
       localStorage.setItem('userData', JSON.stringify(loginData.login));
     }
+  }, [loginData]);
 
-    if (errorOnLogin !== undefined) {
-      setMessage({
-        messageText: errorOnLogin.message,
-        toShow: true,
-        variant: 'error',
-      });
-    }
-  }, [loginData, errorOnLogin]);
+  let errorMessage: string | undefined;
+
+  if (!errorOnLogin?.networkError) {
+    errorMessage = errorOnLogin?.message;
+    console.log(errorOnLogin);
+    // setMessage({
+    //   toShow: true,
+    //   variant: 'error',
+    //   messageText: errorOnListingPosts?.message!,
+    // });
+  }
 
   useEffect(() => {
     if (isLoggedIn()) history.push('/');
@@ -112,6 +115,7 @@ const Login = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      {errorMessage && <span>{errorMessage}</span>}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

@@ -21,6 +21,7 @@ import {
 import Card from '../../components/Card';
 import Message from '../../components/Message';
 import Layout from '../../components/Layout';
+import Icon from '../../assets/icon.svg';
 import { useMessage } from '../../hooks/useMessage';
 import {
   createLikeMutation,
@@ -215,17 +216,21 @@ const Moderator: React.FC = () => {
               color="textPrimary"
               gutterBottom
             >
-              Album
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <img src={Icon} width="100px" />
+                <span>Photos Moderator</span>
+              </Box>{' '}
             </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              color="textSecondary"
-              paragraph
-            >
-              Something short and leading about the collection below—its
-              contents, the creator, etc. Make it short and sweet, but not too
-              short so folks don&apos;t simply skip over it entirely.
+            <Typography variant="h5" align="center" paragraph>
+              Hello👋! Photos is sample test project that I worked upon to show
+              how custom-directives can be implemented with{' '}
+              <a href="https://www.npmjs.com/package/express-graphql">
+                express-graphql
+              </a>{' '}
+              and{' '}
+              <a href="https://www.npmjs.com/package/graphql-directive">
+                graphql-directive
+              </a>
             </Typography>
           </Container>
         </div>

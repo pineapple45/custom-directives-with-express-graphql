@@ -38,7 +38,7 @@ const Post = () => {
   });
 
   const postCommentHandler = () => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn()) {
       setMessage({
         messageText: 'Please login to interact with posts',
         toShow: true,

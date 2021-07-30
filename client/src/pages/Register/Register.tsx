@@ -83,13 +83,16 @@ const Register = () => {
     history.push('/login');
   };
 
-  if (errorOnCreateUser) {
+  let errorMessage: string | undefined;
+
+  if (!errorOnCreateUser?.networkError) {
+    errorMessage = errorOnCreateUser?.message;
     console.log(errorOnCreateUser);
-    setMessage({
-      messageText: errorOnCreateUser.message,
-      toShow: true,
-      variant: 'error',
-    });
+    // setMessage({
+    //   toShow: true,
+    //   variant: 'error',
+    //   messageText: errorOnListingPosts?.message!,
+    // });
   }
 
   useEffect(() => {
@@ -98,6 +101,7 @@ const Register = () => {
 
   return (
     <Container component="main" maxWidth="xs">
+      {errorMessage && <span>{errorMessage}</span>}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -161,7 +165,7 @@ const Register = () => {
             Sign Up
           </Button>
           {registerUserInProgress && <CircularProgress />}
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <Link to="/login">Already have an account? Sign in</Link>
             </Grid>

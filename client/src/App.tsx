@@ -15,6 +15,7 @@ import PostForAdmin from './pages/Admin/Post';
 
 import Moderator from './pages/Moderator';
 import PostForModerator from './pages/Moderator/Post';
+import client from './lib/apollo-client';
 
 import { Role } from './routes/AuthorizedRoute';
 
@@ -24,18 +25,20 @@ config();
 console.log('backend_uri', import.meta.env.SNOWPACK_PUBLIC_BACKEND_URI);
 
 const App: React.FC = () => {
-  const token = JSON.parse(localStorage.getItem('userData')!).token;
-  const client = new ApolloClient({
-    uri: import.meta.env.SNOWPACK_PUBLIC_BACKEND_URI,
-    cache: new InMemoryCache(),
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : '',
-    },
-  });
+  // const token =
+  //   JSON.parse(localStorage.getItem('userData')!) &&
+  //   JSON.parse(localStorage.getItem('userData')!).token;
+  // const client = new ApolloClient({
+  //   uri: import.meta.env.SNOWPACK_PUBLIC_BACKEND_URI,
+  //   cache: new InMemoryCache(),
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: token ? `Bearer ${token}` : '',
+  //   },
+  // });
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={client({})}>
       <BrowserRouter>
         <AuthProvider>
           <Switch>

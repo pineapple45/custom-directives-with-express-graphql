@@ -22,6 +22,7 @@ import {
 import Card from '../../components/Card';
 import Message from '../../components/Message';
 import Layout from '../../components/Layout';
+import Icon from '../../assets/icon.svg';
 import { useMessage } from '../../hooks/useMessage';
 
 import {
@@ -77,7 +78,10 @@ const Album: React.FC = () => {
     loading: loadingPosts,
     error: errorOnListingPosts,
     data: postsData,
-  } = useQuery(listPostsQuery);
+  } = useQuery(listPostsQuery, {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  });
 
   const { authState, isLoggedIn } = useAuth();
 
@@ -91,7 +95,7 @@ const Album: React.FC = () => {
   const history = useHistory();
 
   const addLikeHandler = (postId: string) => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn()) {
       setMessage({
         toShow: true,
         variant: 'error',
@@ -114,7 +118,7 @@ const Album: React.FC = () => {
   };
 
   const removeLikeHandler = (likeId: string, postId: string) => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn()) {
       setMessage({
         toShow: true,
         variant: 'error',
@@ -141,32 +145,48 @@ const Album: React.FC = () => {
   };
 
   if (loadingPosts) return <CircularProgress />;
-  if (errorOnListingPosts) {
-    console.log(errorOnListingPosts);
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnListingPosts.name,
-    });
+
+  let errorMessage = undefined;
+
+  if (!errorOnListingPosts?.networkError) {
+    errorMessage = errorOnListingPosts?.message;
+    // setMessage({
+    //   toShow: true,
+    //   variant: 'error',
+    //   messageText: errorOnListingPosts?.message!,
+    // });
   }
 
   const ifLoggedInUsersLikeExists = (post: any) => {
-    const like = post.likeList.find((like: any) => {
-      if (
-        authState.userId &&
-        like.post._id === post._id &&
-        like.creator._id === authState.userId
-      ) {
-        return like;
-      }
-    });
+    const like =
+      post.likeList &&
+      post.likeList.find((like: any) => {
+        if (
+          authState.userId &&
+          like.post._id === post._id &&
+          like.creator._id === authState.userId
+        ) {
+          return like;
+        }
+      });
 
     return like;
   };
 
+  errorMessage && (
+    <Box display="flex" justifyContent="center" alignItems="center">
+      {errorMessage}
+    </Box>
+  );
+
   return (
     <Layout>
-      <CssBaseline />
+      <CssBaseline />(
+      {errorMessage && (
+        <Box display="flex" justifyContent="center" alignItems="center">
+          {errorMessage}
+        </Box>
+      )}
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
@@ -178,86 +198,103 @@ const Album: React.FC = () => {
               color="textPrimary"
               gutterBottom
             >
-              Album
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <img src={Icon} width="100px" />
+                <span>Photos</span>
+              </Box>
             </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              color="textSecondary"
-              paragraph
-            >
-              Something short and leading about the collection below—its
-              contents, the creator, etc. Make it short and sweet, but not too
-              short so folks don&apos;t simply skip over it entirely.
+            <Typography variant="h5" align="center" paragraph>
+              Hello👋! Photos is sample test project that I worked upon to show
+              how custom-directives can be implemented with{' '}
+              <a href="https://www.npmjs.com/package/express-graphql">
+                express-graphql
+              </a>{' '}
+              and{' '}
+              <a href="https://www.npmjs.com/package/graphql-directive">
+                graphql-directive
+              </a>
             </Typography>
           </Container>
         </div>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {postsData.listPosts.map((post: any) => {
-              const media = {
-                image: post.image,
-                alt: post.image,
-              };
+            {postsData !== undefined ? (
+              postsData.listPosts.map((post: any) => {
+                const media = {
+                  image: post.image,
+                  alt: post.image,
+                };
 
-              return (
-                <Grid item key={post._id} xs={12} sm={6} md={4}>
-                  <Card
-                    media={media}
-                    cardHeading={post.title}
-                    cardBody={post.description}
-                  >
-                    <CardActions>
-                      <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        flexDirection="column"
-                      >
-                        {ifLoggedInUsersLikeExists(post) ? (
-                          <Favorite
-                            key={ifLoggedInUsersLikeExists(post)._id}
-                            color="secondary"
-                            onClick={() =>
-                              removeLikeHandler(
-                                ifLoggedInUsersLikeExists(post)._id,
-                                post._id,
-                              )
-                            }
+                return (
+                  <Grid item key={post._id} xs={12} sm={6} md={4}>
+                    <Card
+                      media={media}
+                      cardHeading={post.title}
+                      cardBody={post.description}
+                    >
+                      <CardActions>
+                        <Box
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          flexDirection="column"
+                        >
+                          {ifLoggedInUsersLikeExists(post) ? (
+                            <Favorite
+                              key={ifLoggedInUsersLikeExists(post)._id}
+                              color="secondary"
+                              onClick={() =>
+                                removeLikeHandler(
+                                  ifLoggedInUsersLikeExists(post)._id,
+                                  post._id,
+                                )
+                              }
+                            />
+                          ) : (
+                            <FavoriteBorderOutlined
+                              // key={ifLoggedInUsersLikeExists(post)._id}
+                              color="secondary"
+                              onClick={() => addLikeHandler(post._id)}
+                            />
+                          )}
+                          {post.likeList ? (
+                            post.likeList.length !== 0 && (
+                              <span>{post.likeList.length}</span>
+                            )
+                          ) : (
+                            <span>could not fetch likes count</span>
+                          )}
+                        </Box>
+                        <Box
+                          display="flex"
+                          justifyContent="center"
+                          alignItems="center"
+                          flexDirection="column"
+                        >
+                          <InsertComment
+                            onClick={() => addCommentHandler(post._id)}
                           />
-                        ) : (
-                          <FavoriteBorderOutlined
-                            // key={ifLoggedInUsersLikeExists(post)._id}
-                            color="secondary"
-                            onClick={() => addLikeHandler(post._id)}
-                          />
-                        )}
-                        {post.likeList.length !== 0 && (
-                          <span>{post.likeList.length}</span>
-                        )}
-                      </Box>
-                      <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        flexDirection="column"
-                      >
-                        <InsertComment
-                          onClick={() => addCommentHandler(post._id)}
-                        />
-                        {post.commentList.length !== 0 && (
-                          <span>{post.commentList.length}</span>
-                        )}
-                      </Box>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              );
-            })}
+                          {post.commentList ? (
+                            post.commentList.length !== 0 && (
+                              <span>{post.commentList.length}</span>
+                            )
+                          ) : (
+                            <span>could not fetch comments count</span>
+                          )}
+                        </Box>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                );
+              })
+            ) : (
+              <div>Could not fetch posts</div>
+            )}
           </Grid>
         </Container>
       </main>
+      )
       <Message message={message} setMessage={setMessage} />
     </Layout>
   );

@@ -12,8 +12,8 @@ type Post {
     title: String!
     description: String
     creator: User!
-    commentList: [Comment!]
-    likeList: [Like!]
+    commentList: [Comment]
+    likeList: [Like]
 }
 `;
 
