@@ -16,6 +16,7 @@ import { AccountCircle } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider';
 import { Role } from '../../routes/AuthorizedRoute';
+import Icon from '../../assets/icon.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,8 +54,9 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="transparent">
       <Toolbar>
+        <img src={Icon} width="50px" />
         <Typography
           variant="h6"
           className={classes.title}

@@ -8,6 +8,7 @@ import {
   ListItem,
   ListItemText,
   Button,
+  Paper,
 } from '@material-ui/core';
 import Card from '../../components/Card';
 import Layout from '../../components/Layout';
@@ -28,7 +29,9 @@ const Post = () => {
     data: postById,
   } = useQuery(getPostByIdQuery, { variables: { _id: id } });
 
-  const [createComment] = useMutation(createCommentMutation);
+  const [createComment, { loading: commentAdditionInProgress }] = useMutation(
+    createCommentMutation,
+  );
 
   const [comment, setComment] = useState('');
   const [message, setMessage] = useMessage({
@@ -91,7 +94,7 @@ const Post = () => {
             >
               ADD
             </Button>
-            {/* {commentAdditionInProgress && <CircularProgress />} */}
+            {commentAdditionInProgress && <CircularProgress />}
           </Grid>
           <Grid item xs={11}>
             Comments
@@ -101,20 +104,15 @@ const Post = () => {
             postById.getPostById.commentList.length !== 0 && (
               <Grid item xs={11}>
                 {postById.getPostById.commentList.map((comment: any) => (
-                  <ListItem
+                  <Paper
                     key={comment._id}
-                    alignItems="flex-start"
-                    style={{
-                      backgroundColor: '#b9f6ca',
-                      borderRadius: '5px',
-                      marginBottom: '5px',
-                    }}
+                    style={{ padding: '10px', margin: '5px' }}
                   >
                     <ListItemText
                       primary={comment.creator.username}
                       secondary={comment.text}
                     />
-                  </ListItem>
+                  </Paper>
                 ))}
               </Grid>
             )}
