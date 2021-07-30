@@ -3,7 +3,7 @@ const path = require('path');
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    public: { url: '%PUBLIC_URL%/', static: true },
+    public: { url: '/', static: true },
     src: { url: '/dist' },
   },
   plugins: [
@@ -36,5 +36,6 @@ module.exports = {
   buildOptions: {
     /* ... */
     baseUrl: '/custom-directives-with-express-graphql',
+    metaUrlPath: 'dist',
   },
 };
