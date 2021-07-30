@@ -8,13 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      - name: Checkout React App
+        uses: actions/checkout@v1
+
+      - name: Install and build React app
+        run: npm install && npm run build-prod
+
+      - name: Deploy React app
+        uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: photos-custom-directives #Must be unique in Heroku
-          heroku_email: shadedvoxels@gmail.com
-          appdir: server
-        env:
-          HD_JWT_SECRET_KEY: ${{secrets.HD_JWT_SECRET_KEY}}
-          HD_MONGO_URI: ${{secrets.HD_MONGO_URI}}
+          branch: gh-pages # The branch the action should deploy to.
+          repository-name: pineapple45/custom-directives-with-express-graphql/client
+          folder: build # The folder the action should deploy.

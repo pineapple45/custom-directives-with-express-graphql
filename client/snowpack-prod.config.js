@@ -17,6 +17,7 @@ module.exports = {
       },
     ],
     ['./env-loader.js', { path: path.resolve(process.cwd(), '.env.prod') }],
+    ['@snowpack/plugin-webpack', {}],
   ],
   routes: [
     /* Enable an SPA Fallback in development: */
@@ -24,7 +25,7 @@ module.exports = {
   ],
   optimize: {
     /* Example: Bundle your final build: */
-    bundle: true,
+    // bundle: true,
   },
   packageOptions: {
     polyfillNode: true,
