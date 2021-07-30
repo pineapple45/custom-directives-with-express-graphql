@@ -35,5 +35,6 @@ module.exports = {
   },
   buildOptions: {
     /* ... */
+    baseUrl: '/custom-directives-with-express-graphql/',
   },
 };
