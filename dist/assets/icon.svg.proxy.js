@@ -1,1 +1,0 @@
-export default "/custom-directives-with-express-graphql/dist/assets/icon.svg";
