@@ -1,4 +1,4 @@
-import {gql} from "../../_snowpack/pkg/@apollo/client.js";
+import {gql} from "../pkg/@apollo/client.js";
 export const createUserMutation = gql`
   mutation CreateUser($username: String!, $email: String!, $password: String!) {
     createUser(

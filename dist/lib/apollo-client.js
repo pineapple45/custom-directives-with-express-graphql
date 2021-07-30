@@ -1,11 +1,11 @@
-import * as __SNOWPACK_ENV__ from '../../_snowpack/env.js';
+import * as __SNOWPACK_ENV__ from '../env.js';
 
 import {
   ApolloClient,
   InMemoryCache,
   createHttpLink
-} from "../../_snowpack/pkg/@apollo/client.js";
-import {onError} from "../../_snowpack/pkg/@apollo/client/link/error.js";
+} from "../pkg/@apollo/client.js";
+import {onError} from "../pkg/@apollo/client/link/error.js";
 let apolloClient = null;
 const isBrowser = __SNOWPACK_ENV__.browser;
 function create(initialState) {

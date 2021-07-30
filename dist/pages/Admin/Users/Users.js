@@ -1,4 +1,4 @@
-import React, {useState} from "../../../../_snowpack/pkg/react.js";
+import React, {useState} from "../../../pkg/react.js";
 import {
   Grid,
   Box,
@@ -9,8 +9,8 @@ import {
   InputLabel,
   Select,
   Button
-} from "../../../../_snowpack/pkg/@material-ui/core.js";
-import {SupervisedUserCircle, Delete} from "../../../../_snowpack/pkg/@material-ui/icons.js";
+} from "../../../pkg/@material-ui/core.js";
+import {SupervisedUserCircle, Delete} from "../../../pkg/@material-ui/icons.js";
 import {Role} from "../../../routes/AuthorizedRoute.js";
 import Modal from "../../../components/Modal/index.js";
 import Message from "../../../components/Message/index.js";
@@ -21,7 +21,7 @@ import {
   deleteUserMutation
 } from "../../../graphql/mutations.js";
 import {listUsersQuery} from "../../../graphql/queries.js";
-import {useMutation, useQuery} from "../../../../_snowpack/pkg/@apollo/client.js";
+import {useMutation, useQuery} from "../../../pkg/@apollo/client.js";
 const Users = () => {
   const {authState, isLoggedIn} = useAuth();
   const {

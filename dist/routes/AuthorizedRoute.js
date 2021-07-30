@@ -1,5 +1,5 @@
-import React from "../../_snowpack/pkg/react.js";
-import {Route, Redirect} from "../../_snowpack/pkg/react-router-dom.js";
+import React from "../pkg/react.js";
+import {Route, Redirect} from "../pkg/react-router-dom.js";
 import {useAuth} from "../context/AuthProvider.js";
 export var Role;
 (function(Role2) {

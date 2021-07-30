@@ -1,5 +1,5 @@
-import React, {useState} from "../../../../_snowpack/pkg/react.js";
-import {useParams} from "../../../../_snowpack/pkg/react-router-dom.js";
+import React, {useState} from "../../../pkg/react.js";
+import {useParams} from "../../../pkg/react-router-dom.js";
 import {
   CircularProgress,
   Grid,
@@ -8,8 +8,8 @@ import {
   ListItem,
   ListItemText,
   Button
-} from "../../../../_snowpack/pkg/@material-ui/core.js";
-import {Delete} from "../../../../_snowpack/pkg/@material-ui/icons.js";
+} from "../../../pkg/@material-ui/core.js";
+import {Delete} from "../../../pkg/@material-ui/icons.js";
 import Layout from "../../../components/Layout/index.js";
 import Card from "../../../components/Card/index.js";
 import Message from "../../../components/Message/index.js";
@@ -20,7 +20,7 @@ import {
   deleteCommentMutation
 } from "../../../graphql/mutations.js";
 import {getPostByIdQuery} from "../../../graphql/queries.js";
-import {useMutation, useQuery} from "../../../../_snowpack/pkg/@apollo/client.js";
+import {useMutation, useQuery} from "../../../pkg/@apollo/client.js";
 const Post = () => {
   const {authState, isLoggedIn} = useAuth();
   const {id} = useParams();

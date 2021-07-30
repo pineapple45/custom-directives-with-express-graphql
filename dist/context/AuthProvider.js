@@ -1,6 +1,6 @@
-import React, {useContext, useState, useEffect} from "../../_snowpack/pkg/react.js";
+import React, {useContext, useState, useEffect} from "../pkg/react.js";
 import {assignRoleMutation} from "../graphql/mutations.js";
-import {useMutation} from "../../_snowpack/pkg/@apollo/client.js";
+import {useMutation} from "../pkg/@apollo/client.js";
 const initialAuthState = {
   userId: void 0,
   token: void 0,

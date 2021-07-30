@@ -1,14 +1,14 @@
-import React from "../../../_snowpack/pkg/react.js";
-import Avatar from "../../../_snowpack/pkg/@material-ui/core/Avatar.js";
-import Button from "../../../_snowpack/pkg/@material-ui/core/Button.js";
-import CssBaseline from "../../../_snowpack/pkg/@material-ui/core/CssBaseline.js";
-import TextField from "../../../_snowpack/pkg/@material-ui/core/TextField.js";
-import Link from "../../../_snowpack/pkg/@material-ui/core/Link.js";
-import Grid from "../../../_snowpack/pkg/@material-ui/core/Grid.js";
-import LockOutlinedIcon from "../../../_snowpack/pkg/@material-ui/icons/LockOutlined.js";
-import Typography from "../../../_snowpack/pkg/@material-ui/core/Typography.js";
-import {makeStyles} from "../../../_snowpack/pkg/@material-ui/core/styles.js";
-import Container from "../../../_snowpack/pkg/@material-ui/core/Container.js";
+import React from "../../pkg/react.js";
+import Avatar from "../../pkg/@material-ui/core/Avatar.js";
+import Button from "../../pkg/@material-ui/core/Button.js";
+import CssBaseline from "../../pkg/@material-ui/core/CssBaseline.js";
+import TextField from "../../pkg/@material-ui/core/TextField.js";
+import Link from "../../pkg/@material-ui/core/Link.js";
+import Grid from "../../pkg/@material-ui/core/Grid.js";
+import LockOutlinedIcon from "../../pkg/@material-ui/icons/LockOutlined.js";
+import Typography from "../../pkg/@material-ui/core/Typography.js";
+import {makeStyles} from "../../pkg/@material-ui/core/styles.js";
+import Container from "../../pkg/@material-ui/core/Container.js";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),

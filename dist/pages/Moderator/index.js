@@ -1,5 +1,5 @@
-import React, {useState} from "../../../_snowpack/pkg/react.js";
-import {useHistory} from "../../../_snowpack/pkg/react-router-dom.js";
+import React, {useState} from "../../pkg/react.js";
+import {useHistory} from "../../pkg/react-router-dom.js";
 import {
   CssBaseline,
   Grid,
@@ -9,13 +9,13 @@ import {
   CircularProgress,
   Box,
   CardActions
-} from "../../../_snowpack/pkg/@material-ui/core.js";
+} from "../../pkg/@material-ui/core.js";
 import {
   FavoriteBorderOutlined,
   Favorite,
   InsertComment,
   Delete
-} from "../../../_snowpack/pkg/@material-ui/icons.js";
+} from "../../pkg/@material-ui/icons.js";
 import Card from "../../components/Card/index.js";
 import Message from "../../components/Message/index.js";
 import Layout from "../../components/Layout/index.js";
@@ -28,7 +28,7 @@ import {
 } from "../../graphql/mutations.js";
 import {getPostByIdQuery, listPostsQuery} from "../../graphql/queries.js";
 import {useAuth} from "../../context/AuthProvider.js";
-import {useMutation, useQuery} from "../../../_snowpack/pkg/@apollo/client.js";
+import {useMutation, useQuery} from "../../pkg/@apollo/client.js";
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2)

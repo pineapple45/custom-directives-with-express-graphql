@@ -1,8 +1,8 @@
-import React from "../../../_snowpack/pkg/react.js";
-import Typography from "../../../_snowpack/pkg/@material-ui/core/Typography.js";
-import {makeStyles} from "../../../_snowpack/pkg/@material-ui/core/styles.js";
-import Container from "../../../_snowpack/pkg/@material-ui/core/Container.js";
-import Link from "../../../_snowpack/pkg/@material-ui/core/Link.js";
+import React from "../../pkg/react.js";
+import Typography from "../../pkg/@material-ui/core/Typography.js";
+import {makeStyles} from "../../pkg/@material-ui/core/styles.js";
+import Container from "../../pkg/@material-ui/core/Container.js";
+import Link from "../../pkg/@material-ui/core/Link.js";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",

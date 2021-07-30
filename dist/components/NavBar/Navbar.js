@@ -1,4 +1,4 @@
-import React from "../../../_snowpack/pkg/react.js";
+import React from "../../pkg/react.js";
 import {
   AppBar,
   Toolbar,
@@ -10,9 +10,9 @@ import {
   makeStyles,
   createStyles,
   Box
-} from "../../../_snowpack/pkg/@material-ui/core.js";
-import {AccountCircle} from "../../../_snowpack/pkg/@material-ui/icons.js";
-import {useHistory} from "../../../_snowpack/pkg/react-router-dom.js";
+} from "../../pkg/@material-ui/core.js";
+import {AccountCircle} from "../../pkg/@material-ui/icons.js";
+import {useHistory} from "../../pkg/react-router-dom.js";
 import {useAuth} from "../../context/AuthProvider.js";
 import {Role} from "../../routes/AuthorizedRoute.js";
 import Icon from "../../assets/icon.svg.proxy.js";

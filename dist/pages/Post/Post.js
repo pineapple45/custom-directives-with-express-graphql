@@ -1,5 +1,5 @@
-import React, {useState} from "../../../_snowpack/pkg/react.js";
-import {useParams} from "../../../_snowpack/pkg/react-router-dom.js";
+import React, {useState} from "../../pkg/react.js";
+import {useParams} from "../../pkg/react-router-dom.js";
 import {
   CircularProgress,
   Grid,
@@ -7,14 +7,14 @@ import {
   ListItemText,
   Button,
   Paper
-} from "../../../_snowpack/pkg/@material-ui/core.js";
+} from "../../pkg/@material-ui/core.js";
 import Card from "../../components/Card/index.js";
 import Layout from "../../components/Layout/index.js";
 import Message from "../../components/Message/index.js";
 import {useMessage} from "../../hooks/useMessage.js";
 import {getPostByIdQuery} from "../../graphql/queries.js";
 import {createCommentMutation} from "../../graphql/mutations.js";
-import {useQuery, useMutation} from "../../../_snowpack/pkg/@apollo/client.js";
+import {useQuery, useMutation} from "../../pkg/@apollo/client.js";
 import {useAuth} from "../../context/AuthProvider.js";
 const Post = () => {
   const {isLoggedIn, authState} = useAuth();

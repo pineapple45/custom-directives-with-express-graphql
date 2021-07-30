@@ -1,7 +1,7 @@
-import React from "../../../_snowpack/pkg/react.js";
-import Snackbar from "../../../_snowpack/pkg/@material-ui/core/Snackbar.js";
-import MuiAlert from "../../../_snowpack/pkg/@material-ui/lab/Alert.js";
-import {makeStyles} from "../../../_snowpack/pkg/@material-ui/core/styles.js";
+import React from "../../pkg/react.js";
+import Snackbar from "../../pkg/@material-ui/core/Snackbar.js";
+import MuiAlert from "../../pkg/@material-ui/lab/Alert.js";
+import {makeStyles} from "../../pkg/@material-ui/core/styles.js";
 const Alert = (props) => {
   return /* @__PURE__ */ React.createElement(MuiAlert, {
     elevation: 6,

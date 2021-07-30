@@ -1,9 +1,9 @@
-import * as __SNOWPACK_ENV__ from '../_snowpack/env.js';
+import * as __SNOWPACK_ENV__ from './env.js';
 
-import {config} from "../_snowpack/pkg/dotenv.js";
-import React from "../_snowpack/pkg/react.js";
-import {BrowserRouter, Switch, Route} from "../_snowpack/pkg/react-router-dom.js";
-import {ApolloProvider} from "../_snowpack/pkg/@apollo/client.js";
+import {config} from "./pkg/dotenv.js";
+import React from "./pkg/react.js";
+import {BrowserRouter, Switch, Route} from "./pkg/react-router-dom.js";
+import {ApolloProvider} from "./pkg/@apollo/client.js";
 import Album from "./pages/Album/index.js";
 import Error404 from "./pages/404/404.js";
 import Login from "./pages/Login/index.js";

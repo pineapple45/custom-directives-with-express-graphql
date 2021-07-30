@@ -1,6 +1,6 @@
-import React from "../../../_snowpack/pkg/react.js";
-import {makeStyles, createStyles} from "../../../_snowpack/pkg/@material-ui/core/styles.js";
-import {Modal as MuiModal} from "../../../_snowpack/pkg/@material-ui/core.js";
+import React from "../../pkg/react.js";
+import {makeStyles, createStyles} from "../../pkg/@material-ui/core/styles.js";
+import {Modal as MuiModal} from "../../pkg/@material-ui/core.js";
 const useStyles = makeStyles((theme) => createStyles({
   paper: {
     position: "absolute",

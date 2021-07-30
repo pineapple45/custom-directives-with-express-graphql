@@ -1,4 +1,4 @@
-import {useState} from "../../_snowpack/pkg/react.js";
+import {useState} from "../pkg/react.js";
 export const useMessage = ({
   messageText,
   variant,

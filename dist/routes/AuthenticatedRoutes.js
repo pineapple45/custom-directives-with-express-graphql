@@ -1,4 +1,4 @@
-import {Route, Redirect} from "../../_snowpack/pkg/react-router-dom.js";
+import {Route, Redirect} from "../pkg/react-router-dom.js";
 const AuthenticatedRoutes = ({
   component: Component,
   isLoggedIn,

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "../../../_snowpack/pkg/react.js";
+import React, {useState, useEffect} from "../../pkg/react.js";
 import {
   Container,
   makeStyles,
@@ -11,13 +11,13 @@ import {
   Button,
   Avatar,
   CircularProgress
-} from "../../../_snowpack/pkg/@material-ui/core.js";
+} from "../../pkg/@material-ui/core.js";
 import Message from "../../components/Message/index.js";
-import LockOutlinedIcon from "../../../_snowpack/pkg/@material-ui/icons/LockOutlined.js";
-import {Link, useHistory} from "../../../_snowpack/pkg/react-router-dom.js";
+import LockOutlinedIcon from "../../pkg/@material-ui/icons/LockOutlined.js";
+import {Link, useHistory} from "../../pkg/react-router-dom.js";
 import {useAuth} from "../../context/AuthProvider.js";
 import {loginUserQuery} from "../../graphql/queries.js";
-import {useLazyQuery} from "../../../_snowpack/pkg/@apollo/client.js";
+import {useLazyQuery} from "../../pkg/@apollo/client.js";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),

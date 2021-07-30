@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "../../../_snowpack/pkg/react.js";
-import LockOutlinedIcon from "../../../_snowpack/pkg/@material-ui/icons/LockOutlined.js";
+import React, {useState, useEffect} from "../../pkg/react.js";
+import LockOutlinedIcon from "../../pkg/@material-ui/icons/LockOutlined.js";
 import {
   Container,
   Typography,
@@ -10,10 +10,10 @@ import {
   CssBaseline,
   CircularProgress,
   makeStyles
-} from "../../../_snowpack/pkg/@material-ui/core.js";
-import {Link, useHistory} from "../../../_snowpack/pkg/react-router-dom.js";
+} from "../../pkg/@material-ui/core.js";
+import {Link, useHistory} from "../../pkg/react-router-dom.js";
 import Message from "../../components/Message/index.js";
-import {useMutation} from "../../../_snowpack/pkg/@apollo/client.js";
+import {useMutation} from "../../pkg/@apollo/client.js";
 import {createUserMutation} from "../../graphql/mutations.js";
 import {useAuth} from "../../context/AuthProvider.js";
 const useStyles = makeStyles((theme) => ({

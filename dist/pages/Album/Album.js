@@ -1,6 +1,6 @@
-import React from "../../../_snowpack/pkg/react.js";
-import {useHistory} from "../../../_snowpack/pkg/react-router-dom.js";
-import {useMutation, useQuery} from "../../../_snowpack/pkg/@apollo/client.js";
+import React from "../../pkg/react.js";
+import {useHistory} from "../../pkg/react-router-dom.js";
+import {useMutation, useQuery} from "../../pkg/@apollo/client.js";
 import {
   CssBaseline,
   Grid,
@@ -10,12 +10,12 @@ import {
   CircularProgress,
   Box,
   CardActions
-} from "../../../_snowpack/pkg/@material-ui/core.js";
+} from "../../pkg/@material-ui/core.js";
 import {
   FavoriteBorderOutlined,
   Favorite,
   InsertComment
-} from "../../../_snowpack/pkg/@material-ui/icons.js";
+} from "../../pkg/@material-ui/icons.js";
 import Card from "../../components/Card/index.js";
 import Message from "../../components/Message/index.js";
 import Layout from "../../components/Layout/index.js";

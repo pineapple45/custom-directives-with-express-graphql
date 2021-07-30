@@ -1,4 +1,4 @@
-import {gql} from "../../_snowpack/pkg/@apollo/client.js";
+import {gql} from "../pkg/@apollo/client.js";
 export const loginUserQuery = gql`
   query Login($usernameOrEmail: String!, $password: String!) {
     login(usernameOrEmail: $usernameOrEmail, password: $password) {

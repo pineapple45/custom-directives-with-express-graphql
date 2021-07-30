@@ -1,11 +1,11 @@
-import React from "../../../_snowpack/pkg/react.js";
+import React from "../../pkg/react.js";
 import {
   Card as MuiCard,
   CardMedia,
   CardContent,
   Typography,
   makeStyles
-} from "../../../_snowpack/pkg/@material-ui/core.js";
+} from "../../pkg/@material-ui/core.js";
 const useStyles = makeStyles((theme) => ({
   card: {
     height: "100%",
