@@ -7,7 +7,7 @@
     "start": "tsc --watch",
     "compile": "tsc && node dist/index.js",
     "dev": "nodemon --watch src/ --exec \"npm run compile\" --verbose -e ts",
-    "build": "rimraf ./dist && tsc && node dist/index.js",
+    "build": "tsc -p .",
     "clean": "rimraf ./dist"
   },
   "author": "",
