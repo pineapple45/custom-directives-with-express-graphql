@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   mount: {
     public: { url: '/', static: true },
-    src: { url: '/dist' },
+    src: { url: '/custom-directives-with-express-graphql/dist' },
   },
   plugins: [
     '@snowpack/plugin-react-refresh',
