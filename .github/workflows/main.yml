@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout React App
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
       - name: Install and build React app
-        run: npm install && npm run build-prod
+        run: cd client && npm install && npm run build-prod
 
       - name: Deploy React app
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+      -  uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: client/build # The folder the action should deploy.
