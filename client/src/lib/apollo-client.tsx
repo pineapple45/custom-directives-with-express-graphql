@@ -10,7 +10,7 @@ import { onError, ErrorHandler } from '@apollo/client/link/error';
 import Message from '../components/Message';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
-const isBrowser: boolean = (import.meta.env as any).browser;
+const isBrowser: boolean = (process.env as any).browser;
 
 // Polyfill fetch() on the server (used by apollo-client)
 // if (!isBrowser) {
@@ -26,8 +26,15 @@ function create(initialState: any) {
     JSON.parse(localStorage.getItem('userData')!) &&
     JSON.parse(localStorage.getItem('userData')!).token;
 
+  const BACKEND_URI =
+    process.env.NODE_ENV === 'production'
+      ? process.env.REACT_APP_PUBLIC_BACKEND_URI
+      : process.env.REACT_APP_PUBLIC_BACKEND_URI_DEV;
+
+  console.log('backend_uri', BACKEND_URI);
+
   const httpLink = createHttpLink({
-    uri: import.meta.env.SNOWPACK_PUBLIC_BACKEND_URI,
+    uri: BACKEND_URI,
     headers: {
       'Content-Type': 'application/json',
       Authorization: token ? `Bearer ${token}` : '',
@@ -38,7 +45,7 @@ function create(initialState: any) {
     if (graphQLErrors) {
       for (const { message, locations, path } of graphQLErrors) {
         console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
         );
         alert(message);
       }

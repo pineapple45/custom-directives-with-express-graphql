@@ -32,9 +32,8 @@ const Footer = () => {
       <footer className={classes.footer}>
         <Container maxWidth="sm">
           <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
             <Link color="inherit" href="https://material-ui.com/">
-              Cutlery
+              Photos
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
