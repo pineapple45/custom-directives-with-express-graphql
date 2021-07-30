@@ -1,20 +1,20 @@
 name: React and Express app deployment
 on:
   push:
-    branches: 'main'
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Express App
-        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: 'photos' #Must be unique in Heroku
-          heroku_email: 'shadedvoxels@gmail.com'
-          appdir: 'server'
+          heroku_app_name: photos #Must be unique in Heroku
+          heroku_email: shadedvoxels@gmail.com
+          appdir: server
         env:
           HD_JWT_SECRET_KEY: ${{secrets.HD_JWT_SECRET_KEY}}
           HD_MONGO_URI: ${{secrets.HD_MONGO_URI}}
