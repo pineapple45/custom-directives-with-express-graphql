@@ -5,7 +5,7 @@
     "start:prod": "snowpack dev --config ./snowpack-prod.config.js",
     "build": "snowpack build",
     "build:dev": "snowpack build --config ./snowpack-dev.config.js",
-    "build:prod": "snowpack build --config ./snowpack-prod.config.js",
+    "build:prod": "snowpack build --config ./snowpack-prod.config.js && touch ./docs/.nojekyll",
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
