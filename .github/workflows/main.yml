@@ -19,5 +19,15 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: client/build # The folder the action should deploy.
+
+      - name: Checkout Express App
+        uses: actions/checkout@v2
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: photos-custom-directives #Must be unique in Heroku
+          heroku_email: shadedvoxels@gmail.com
+          appdir: server
         env:
-          REACT_APP_PUBLIC_BACKEND_URI: ${{secrets.REACT_APP_PUBLIC_BACKEND_URI}}
+          HD_JWT_SECRET_KEY: ${{secrets.HD_JWT_SECRET_KEY}}
+          HD_MONGO_URI: ${{secrets.HD_MONGO_URI}}

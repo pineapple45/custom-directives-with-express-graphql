@@ -155,13 +155,15 @@ const Album: React.FC = () => {
   const ifLoggedInUsersLikeExists = (post: any) => {
     const like =
       post.likeList &&
-      post.likeList.forEach((like: any) => {
+      post.likeList.find((like: any) => {
         if (
           authState.userId &&
           like.post._id === post._id &&
           like.creator._id === authState.userId
         ) {
           return like;
+        } else {
+          return null;
         }
       });
 
