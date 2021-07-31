@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/custom-directives-with-express-graphql/static/css/main.8bb27fc2.chunk.css",
-    "main.js": "/custom-directives-with-express-graphql/static/js/main.1006c020.chunk.js",
-    "main.js.map": "/custom-directives-with-express-graphql/static/js/main.1006c020.chunk.js.map",
+    "main.js": "/custom-directives-with-express-graphql/static/js/main.64d81970.chunk.js",
+    "main.js.map": "/custom-directives-with-express-graphql/static/js/main.64d81970.chunk.js.map",
     "runtime-main.js": "/custom-directives-with-express-graphql/static/js/runtime-main.3c0b067c.js",
     "runtime-main.js.map": "/custom-directives-with-express-graphql/static/js/runtime-main.3c0b067c.js.map",
     "static/js/2.7352b1d3.chunk.js": "/custom-directives-with-express-graphql/static/js/2.7352b1d3.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.3c0b067c.js",
     "static/js/2.7352b1d3.chunk.js",
     "static/css/main.8bb27fc2.chunk.css",
-    "static/js/main.1006c020.chunk.js"
+    "static/js/main.64d81970.chunk.js"
   ]
 }
