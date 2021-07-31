@@ -16,7 +16,7 @@ function create(initialState: any) {
 
   const BACKEND_URI =
     process.env.NODE_ENV === 'production'
-      ? process.env.REACT_APP_PUBLIC_BACKEND_URI
+      ? 'https://photos-custom-directives.herokuapp.com/graphql'
       : process.env.REACT_APP_PUBLIC_BACKEND_URI_DEV;
 
   console.log('backend_uri', BACKEND_URI);

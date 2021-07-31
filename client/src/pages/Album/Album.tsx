@@ -170,7 +170,7 @@ const Album: React.FC = () => {
 
   return (
     <Layout>
-      <CssBaseline />(
+      <CssBaseline />
       {errorMessage && (
         <Box display="flex" justifyContent="center" alignItems="center">
           {errorMessage}
@@ -283,7 +283,6 @@ const Album: React.FC = () => {
           </Grid>
         </Container>
       </main>
-      )
       <Message message={message} setMessage={setMessage} />
     </Layout>
   );
