@@ -168,12 +168,6 @@ const Album: React.FC = () => {
     return like;
   };
 
-  errorMessage && (
-    <Box display="flex" justifyContent="center" alignItems="center">
-      {errorMessage}
-    </Box>
-  );
-
   return (
     <Layout>
       <CssBaseline />(
