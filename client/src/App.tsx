@@ -25,7 +25,7 @@ config();
 const App: React.FC = () => {
   return (
     <ApolloProvider client={client({})}>
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <AuthProvider>
           <Switch>
             <AuthorizedRoute
