@@ -1,3 +1,4 @@
+/* This file is for reference only and has no use in the project */
 import { buildSchema } from 'graphql';
 import { addDirectiveResolveFunctionsToSchema } from 'graphql-directive';
 import { upperCase, isAuthenticated, hasAuthorisation } from '../directives';
