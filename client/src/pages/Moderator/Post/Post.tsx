@@ -15,15 +15,14 @@ import Card from '../../../components/Card';
 import Message from '../../../components/Message';
 import { useMessage } from '../../../hooks/useMessage';
 import { useAuth } from '../../../context/AuthProvider';
-import {
-  createCommentMutation,
-  deleteCommentMutation,
-} from '../../../graphql/mutations';
 import { getPostByIdQuery } from '../../../graphql/queries';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+
+import useCreateComment from '../../../hooks/mutations/useCreateComment';
+import useDeleteComment from '../../../hooks/mutations/useDeleteComment';
 
 const Post = () => {
-  const { authState, isLoggedIn } = useAuth();
+  const { authState } = useAuth();
   const { id }: { id: any } = useParams();
 
   const {
@@ -32,13 +31,9 @@ const Post = () => {
     data: postByIdData,
   } = useQuery(getPostByIdQuery, { variables: { _id: id } });
 
-  const [deleteComment, { error: errorOnDeleteComment }] = useMutation(
-    deleteCommentMutation
-  );
-
-  const [createComment, { loading: commentInProgress }] = useMutation(
-    createCommentMutation
-  );
+  const { createCommentMutationHandler, isLoading: commentAdditionInProgress } =
+    useCreateComment();
+  const { deleteCommentMutationHandler } = useDeleteComment();
 
   const [comment, setComment] = useState('');
   const [message, setMessage] = useMessage({
@@ -54,51 +49,35 @@ const Post = () => {
       variant: 'error',
     });
 
-  const checkIfUserIsNotAuthenticated = () => {
-    if (!isLoggedIn) {
-      setMessage({
-        toShow: true,
-        variant: 'error',
-        messageText: 'Unauthenticated access',
-      });
-      return true;
-    }
-    return false;
-  };
-
-  const postCommentHandler = () => {
-    if (checkIfUserIsNotAuthenticated()) return;
-
-    createComment({
-      variables: {
+  const postCommentHandler = async () => {
+    const response = await createCommentMutationHandler(
+      {
         text: comment,
         creatorId: authState.userId,
         postId: id,
       },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: id } }],
+      { postId: id }
+    );
+
+    setMessage({
+      messageText: response.error ? response.data.message : 'comment added',
+      toShow: true,
+      variant: response.error ? 'error' : 'success',
     });
   };
 
-  const deleteCommentHandler = (commentId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    deleteComment({
-      variables: { _id: commentId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: id } }],
-    });
+  const deleteCommentHandler = async (commentId: string) => {
+    const response = await deleteCommentMutationHandler(
+      { _id: commentId },
+      { postId: id }
+    );
 
     setMessage({
-      messageText: 'comment deleted successfully',
+      messageText: response.error ? response.data.message : 'comment deleted',
       toShow: true,
-      variant: 'success',
+      variant: response.error ? 'error' : 'success',
     });
   };
-
-  errorOnDeleteComment &&
-    setMessage({
-      messageText: errorOnDeleteComment.message,
-      toShow: true,
-      variant: 'error',
-    });
 
   return (
     <Layout>
@@ -134,7 +113,7 @@ const Post = () => {
             >
               ADD
             </Button>
-            {commentInProgress && <CircularProgress />}
+            {commentAdditionInProgress && <CircularProgress />}
           </Grid>
           <Grid item xs={11}>
             COMMENTS

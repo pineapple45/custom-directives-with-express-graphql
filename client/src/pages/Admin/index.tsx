@@ -4,7 +4,6 @@ import {
   CssBaseline,
   Grid,
   Typography,
-  makeStyles,
   Container,
   CircularProgress,
   Box,
@@ -26,64 +25,28 @@ import Layout from '../../components/Layout';
 import Modal from '../../components/Modal';
 import Icon from '../../assets/icon.svg';
 import { useMessage } from '../../hooks/useMessage';
-import {
-  createLikeMutation,
-  deleteLikeMutation,
-  deletePostMutation,
-  createPostMutation,
-} from '../../graphql/mutations';
-import { getPostByIdQuery, listPostsQuery } from '../../graphql/queries';
-import { useAuth } from '../../context/AuthProvider';
-import { useMutation, useQuery } from '@apollo/client';
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-  },
-}));
+import { listPostsQuery } from '../../graphql/queries';
+import { useAuth } from '../../context/AuthProvider';
+import { useQuery } from '@apollo/client';
+
+import { commonStyles } from '../utils';
+
+import useCreatePost from '../../hooks/mutations/useCreatePost';
+import useDeletePost from '../../hooks/mutations/useDeletePost';
+import useCreateLike from '../../hooks/mutations/useCreateLike';
+import useDeleteLike from '../../hooks/mutations/useDeleteLike';
+
+const useStyles = commonStyles;
 
 const Admin: React.FC = () => {
-  const { isLoggedIn, authState } = useAuth();
+  const { authState } = useAuth();
 
   const { loading: loadingPosts, data: postsData } = useQuery(listPostsQuery);
-
-  const [createPost, { error: errorOnPostCreation }] =
-    useMutation(createPostMutation);
-
-  const [deletePost, { error: errorOnPostDeletion }] =
-    useMutation(deletePostMutation);
-
-  const [createLike, { error: errorOnLikeCreation }] =
-    useMutation(createLikeMutation);
-
-  const [deleteLike, { error: errorOnLikeDeletion }] =
-    useMutation(deleteLikeMutation);
+  const { createPostMutationHandler } = useCreatePost();
+  const { deletePostMutationHandler } = useDeletePost();
+  const { createLikeMutationHandler } = useCreateLike();
+  const { deleteLikeMutationHandler } = useDeleteLike();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [inputState, setInputState] = useState({
@@ -108,32 +71,16 @@ const Admin: React.FC = () => {
     });
   };
 
-  const checkIfUserIsNotAuthenticated = () => {
-    if (!isLoggedIn) {
-      setMessage({
-        toShow: true,
-        variant: 'error',
-        messageText: 'Unauthenticated access',
-      });
-      return true;
-    }
-    return false;
-  };
-
-  const createPostHandler = () => {
-    if (checkIfUserIsNotAuthenticated()) return;
-
-    console.log(inputState);
-
-    createPost({
-      variables: { ...inputState, creatorId: authState.userId },
-      refetchQueries: [{ query: listPostsQuery }],
+  const createPostHandler = async () => {
+    const response = await createPostMutationHandler({
+      ...inputState,
+      creatorId: authState.userId,
     });
 
     setMessage({
+      messageText: response.error ? response.data.message : 'post added',
       toShow: true,
-      variant: 'success',
-      messageText: 'post added successfully',
+      variant: response.error ? 'error' : 'success',
     });
 
     setInputState({
@@ -141,67 +88,45 @@ const Admin: React.FC = () => {
       description: '',
       image: '',
     });
+
     setIsModalOpen(false);
   };
 
-  if (errorOnPostCreation) {
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnPostCreation.message,
-    });
-  }
-
-  const deletePostHandler = (postId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    deletePost({
-      variables: { _id: postId },
-      refetchQueries: [{ query: listPostsQuery }],
-    });
+  const deletePostHandler = async (postId: string) => {
+    const response = await deletePostMutationHandler({ _id: postId });
 
     setMessage({
+      messageText: response.error ? response.data.message : 'post deleted',
       toShow: true,
-      variant: 'success',
-      messageText: 'post deleted successfully',
+      variant: response.error ? 'error' : 'success',
     });
   };
 
-  errorOnPostDeletion &&
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnPostDeletion?.message,
-    });
+  const addLikeHandler = async (postId: string) => {
+    const response = await createLikeMutationHandler(
+      { postId: postId, creatorId: authState.userId },
+      { postId }
+    );
 
-  const addLikeHandler = (postId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    createLike({
-      variables: { postId: postId, creatorId: authState.userId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: postId } }],
+    setMessage({
+      messageText: response.error && response.data.message,
+      toShow: response.error && true,
+      variant: 'error',
     });
   };
 
-  errorOnLikeCreation &&
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnLikeCreation.message,
-    });
+  const removeLikeHandler = async (likeId: string, postId: string) => {
+    const response = await deleteLikeMutationHandler(
+      { _id: likeId },
+      { postId }
+    );
 
-  const removeLikeHandler = (likeId: string, postId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    deleteLike({
-      variables: { _id: likeId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: postId } }],
+    setMessage({
+      messageText: response.error && response.data.message,
+      toShow: response.error && true,
+      variant: 'error',
     });
   };
-
-  errorOnLikeDeletion &&
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnLikeDeletion.message,
-    });
 
   const addCommentHandler = (postId: string) => {
     history.push(`/admin/post/${postId}`);

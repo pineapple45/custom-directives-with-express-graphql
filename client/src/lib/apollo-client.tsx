@@ -10,7 +10,8 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 const isBrowser: boolean = (process.env as any).browser;
 
 function create(initialState: any) {
-  const token =
+  let token =
+    localStorage.getItem('userData') !== 'undefined' &&
     JSON.parse(localStorage.getItem('userData')!) &&
     JSON.parse(localStorage.getItem('userData')!).token;
 
@@ -30,14 +31,15 @@ function create(initialState: any) {
   });
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
-      for (const { message, locations, path } of graphQLErrors) {
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-        );
-        alert(message);
-      }
-    }
+    // if (graphQLErrors) {
+    //   for (const { message, locations, path } of graphQLErrors) {
+    //     console.log(
+    //       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+    //     );
+    //     alert(message);
+    //   }
+    // }
+
     if (networkError) {
       if (isBrowser && networkError.message === 'failed to fetch') {
         alert('Please check your internet connection or retry agan!');

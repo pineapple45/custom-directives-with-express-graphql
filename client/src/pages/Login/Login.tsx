@@ -4,8 +4,6 @@ import {
   makeStyles,
   Typography,
   Grid,
-  Checkbox,
-  FormControlLabel,
   TextField,
   CssBaseline,
   Button,
@@ -16,8 +14,7 @@ import Message from '../../components/Message';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider';
-import { loginUserQuery } from '../../graphql/queries';
-import { useLazyQuery } from '@apollo/client';
+import useLoginUser from '../../hooks/mutations/useLoginUser';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,10 +41,7 @@ const Login = () => {
   const history = useHistory();
   const { authState, setAuthState, isLoggedIn } = useAuth();
 
-  const [
-    loginUser,
-    { loading: loginUserInProgress, error: errorOnLogin, data: loginData },
-  ] = useLazyQuery(loginUserQuery);
+  const { loginUserQueryHandler } = useLoginUser();
 
   const [message, setMessage] = useState<{
     toShow: boolean;
@@ -64,6 +58,8 @@ const Login = () => {
     password: '',
   });
 
+  const [loginUserInProgress, setLoginUserInProgress] = useState(false);
+
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputState({
       ...inputState,
@@ -71,9 +67,28 @@ const Login = () => {
     });
   };
 
-  const loginFormHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const loginFormHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    loginUser({ variables: inputState });
+    setLoginUserInProgress(true);
+    const response = await loginUserQueryHandler({ ...inputState });
+
+    setMessage({
+      messageText: response.error ? response.data.message : 'login succesful',
+      toShow: true,
+      variant: response.error ? 'error' : 'success',
+    });
+
+    setLoginUserInProgress(false);
+    if (response.error) {
+      return;
+    }
+
+    setAuthState({
+      ...authState,
+      ...response.data.login,
+    });
+
+    localStorage.setItem('userData', JSON.stringify(response.data.login));
 
     setInputState({
       usernameOrEmail: '',
@@ -86,31 +101,12 @@ const Login = () => {
   }, [history, isLoggedIn]);
 
   useEffect(() => {
-    if (loginData !== undefined) {
-      setAuthState({
-        ...authState,
-        ...loginData.login,
-      });
-
-      localStorage.setItem('userData', JSON.stringify(loginData.login));
-    }
-  }, [loginData, setAuthState, authState]);
-
-  let errorMessage: string | undefined;
-
-  if (!errorOnLogin?.networkError) {
-    errorMessage = errorOnLogin?.message;
-    console.log(errorOnLogin);
-  }
-
-  useEffect(() => {
     if (isLoggedIn()) history.push('/');
   }, [isLoggedIn, history]);
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      {errorMessage && <span>{errorMessage}</span>}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -143,10 +139,10 @@ const Login = () => {
             autoComplete="current-password"
             onChange={inputChangeHandler}
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
@@ -159,9 +155,9 @@ const Login = () => {
           {loginUserInProgress && <CircularProgress />}
 
           <Grid container>
-            <Grid item xs>
+            {/* <Grid item xs>
               <Link to="/forgot-password">Forgot password?</Link>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <Link to="/register">{"Don't have an account? Sign Up"}</Link>
             </Grid>

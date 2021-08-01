@@ -1,8 +1,12 @@
 import User, { Role } from '../../../models/User';
-import { transformUser } from '../utils';
+import {
+  transformUser,
+  ValidateEmail,
+  checkIfValIsUsernameOrEmail,
+} from '../utils';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { GraphQLError } from 'graphql';
+import { GraphQLError, StringValueNode } from 'graphql';
 
 interface UserArgsType {
   user: UserType;
@@ -42,26 +46,35 @@ export const getUserById = async (args: { _id: string }) => {
 };
 
 export const assignRole = async (args: {
-  role: Role;
+  role: Role | string;
   assignedBy: string;
   assignedUser: string;
 }) => {
   try {
+    if (
+      args.role === '' ||
+      args.assignedBy === '' ||
+      args.assignedUser === ''
+    ) {
+      throw new Error('Please specify the role to be assigned');
+    }
+
     const assigny = await User.findById(args.assignedBy);
     if (!assigny) {
       throw new Error('The user who is assigning role is not present in db');
     }
 
     const userToBeAssigned = await User.findById(args.assignedUser);
-    if (userToBeAssigned._doc.role === 'ADMIN')
+    if (userToBeAssigned.role === 'ADMIN')
       throw new Error(`User is already assigned ${args.role} role`);
 
-    const updatedUser = await User.updateOne(
+    const updatedUser = await User.findOneAndUpdate(
       { _id: args.assignedUser },
-      { $set: { role: args.role } }
+      { role: args.role }
     );
 
     const result = await User.findById(args.assignedUser);
+
     return transformUser(result);
   } catch (error) {
     throw error;
@@ -69,6 +82,16 @@ export const assignRole = async (args: {
 };
 
 export const createUser = async (args: UserArgsType) => {
+  if (
+    args.user.email === '' ||
+    args.user.username === '' ||
+    args.user.password === ''
+  )
+    throw new Error('Please fill all form feilds ');
+
+  if (!ValidateEmail(args.user.email))
+    throw new Error('Please enter valid email');
+
   const userInDb = await User.findOne({
     email: args.user.email,
     username: args.user.username,
@@ -106,31 +129,29 @@ export const deleteUser = async (_id: string) => {
 };
 
 export const login = async (args: UserLoginArgs) => {
-  const login = checkIfValIsUsernameOrEmail(args.usernameOrEmail);
+  if (args.usernameOrEmail === '' || args.password === '')
+    throw new Error('Please fill all form feilds ');
 
-  if (login.type === 'email') {
+  const loginArgs = checkIfValIsUsernameOrEmail(args.usernameOrEmail);
+
+  if (loginArgs.type === 'email') {
     const emailCheck = await User.findOne({
-      email: login.email,
+      email: loginArgs.email,
     });
 
     if (!emailCheck) {
-      throw new Error(`No account found with email ${login.email}`);
+      throw new Error(`No account found with email ${loginArgs.email}`);
     }
-
-    console.log('emailCheck', emailCheck);
 
     const data = passwordCheck(args, emailCheck);
     return data;
   } else {
-    console.log(login.username);
     const usernameCheck = await User.findOne({
-      username: login.username,
+      username: loginArgs.username,
     });
 
-    console.log(usernameCheck);
-
     if (!usernameCheck) {
-      throw new Error(`No account found with username ${login.username}`);
+      throw new Error(`No account found with username ${loginArgs.username}`);
     }
 
     const data = passwordCheck(args, usernameCheck);
@@ -157,23 +178,4 @@ const passwordCheck = async (args: UserLoginArgs, user: UserType) => {
     username: user.username,
     role: user.role,
   };
-};
-
-const checkIfValIsUsernameOrEmail = (usernameOrEmail: string) => {
-  // Check if email
-  if (/\@/.test(usernameOrEmail)) {
-    //its email address
-    // your code goes here
-    return {
-      type: 'email',
-      email: usernameOrEmail,
-    };
-  } else {
-    //its username
-    // your code goes here
-    return {
-      type: 'username',
-      username: usernameOrEmail,
-    };
-  }
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-interface MessageType {
+export interface MessageProps {
   messageText: string | null;
   variant: 'success' | 'error' | 'warning';
   toShow: boolean;
@@ -10,11 +10,11 @@ export const useMessage = ({
   messageText,
   variant,
   toShow,
-}: MessageType): [
-  message: MessageType,
-  setMessage: ({ messageText, variant, toShow }: MessageType) => void
+}: MessageProps): [
+  message: MessageProps,
+  setMessage: ({ messageText, variant, toShow }: MessageProps) => void
 ] => {
-  const [message, setMessage] = useState<MessageType>({
+  const [message, setMessage] = useState<MessageProps>({
     toShow,
     variant,
     messageText,

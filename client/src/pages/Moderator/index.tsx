@@ -4,7 +4,6 @@ import {
   CssBaseline,
   Grid,
   Typography,
-  makeStyles,
   Container,
   CircularProgress,
   Box,
@@ -23,60 +22,26 @@ import Message from '../../components/Message';
 import Layout from '../../components/Layout';
 import Icon from '../../assets/icon.svg';
 import { useMessage } from '../../hooks/useMessage';
-import {
-  createLikeMutation,
-  deleteLikeMutation,
-  deletePostMutation,
-} from '../../graphql/mutations';
-import { getPostByIdQuery, listPostsQuery } from '../../graphql/queries';
-import { useAuth } from '../../context/AuthProvider';
-import { useMutation, useQuery } from '@apollo/client';
+import { commonStyles } from '../utils';
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-  },
-}));
+import { listPostsQuery } from '../../graphql/queries';
+import { useAuth } from '../../context/AuthProvider';
+import { useQuery } from '@apollo/client';
+
+import useDeletePost from '../../hooks/mutations/useDeletePost';
+import useCreateLike from '../../hooks/mutations/useCreateLike';
+import useDeleteLike from '../../hooks/mutations/useDeleteLike';
+
+const useStyles = commonStyles;
 
 const Moderator: React.FC = () => {
-  const { isLoggedIn, authState } = useAuth();
+  const { authState } = useAuth();
 
   const { loading: loadingPosts, data: postsData } = useQuery(listPostsQuery);
 
-  const [deletePost, { error: errorOnPostDeletion }] =
-    useMutation(deletePostMutation);
-
-  const [createLike, { error: errorOnLikeCreation }] =
-    useMutation(createLikeMutation);
-
-  const [deleteLike, { error: errorOnLikeDeletion }] =
-    useMutation(deleteLikeMutation);
+  const { deletePostMutationHandler } = useDeletePost();
+  const { createLikeMutationHandler } = useCreateLike();
+  const { deleteLikeMutationHandler } = useDeleteLike();
 
   const [message, setMessage] = useMessage({
     messageText: '',
@@ -87,65 +52,41 @@ const Moderator: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const checkIfUserIsNotAuthenticated = () => {
-    if (!isLoggedIn) {
-      setMessage({
-        toShow: true,
-        variant: 'error',
-        messageText: 'Unauthenticated access',
-      });
-      return true;
-    }
-    return false;
-  };
-
-  const deletePostHandler = (postId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    deletePost({ variables: { _id: postId } });
+  const deletePostHandler = async (postId: string) => {
+    const response = await deletePostMutationHandler({ _id: postId });
 
     setMessage({
+      messageText: response.error ? response.data.message : 'post deleted',
       toShow: true,
-      variant: 'success',
-      messageText: 'post deleted successfully',
+      variant: response.error ? 'error' : 'success',
     });
   };
 
-  errorOnPostDeletion &&
+  const addLikeHandler = async (postId: string) => {
+    const response = await createLikeMutationHandler(
+      { postId: postId, creatorId: authState.userId },
+      { postId }
+    );
+
     setMessage({
-      toShow: true,
+      messageText: response.error && response.data.message,
+      toShow: response.error && true,
       variant: 'error',
-      messageText: errorOnPostDeletion?.message,
-    });
-
-  const addLikeHandler = (postId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    createLike({
-      variables: { postId: postId, creatorId: authState.userId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: postId } }],
     });
   };
 
-  errorOnLikeCreation &&
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnLikeCreation.message,
-    });
+  const removeLikeHandler = async (likeId: string, postId: string) => {
+    const response = await deleteLikeMutationHandler(
+      { _id: likeId },
+      { postId }
+    );
 
-  const removeLikeHandler = (likeId: string, postId: string) => {
-    if (checkIfUserIsNotAuthenticated()) return;
-    deleteLike({
-      variables: { _id: likeId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: postId } }],
+    setMessage({
+      messageText: response.error && response.data.message,
+      toShow: response.error && true,
+      variant: 'error',
     });
   };
-
-  errorOnLikeDeletion &&
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnLikeDeletion.message,
-    });
 
   const addCommentHandler = (postId: string) => {
     history.push(`/moderator/post/${postId}`);
@@ -240,7 +181,6 @@ const Moderator: React.FC = () => {
                             />
                           ) : (
                             <FavoriteBorderOutlined
-                              // key={ifLoggedInUsersLikeExists(post)._id}
                               color="secondary"
                               onClick={() => addLikeHandler(post._id)}
                             />

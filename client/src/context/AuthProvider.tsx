@@ -27,14 +27,16 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    const userDataFromStorage = JSON.parse(localStorage.getItem('userData')!);
+    const userDataFromStorage =
+      localStorage.getItem('userData') !== 'undefined' &&
+      JSON.parse(localStorage.getItem('userData')!);
     if (userDataFromStorage && authState.userId === undefined) {
       setAuthState({
         ...authState,
         ...userDataFromStorage,
       });
     }
-  }, [authState]);
+  }, [authState, setAuthState]);
 
   return (
     <AuthContext.Provider

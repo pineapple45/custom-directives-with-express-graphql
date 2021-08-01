@@ -17,12 +17,10 @@ import Modal from '../../../components/Modal';
 import Message from '../../../components/Message';
 import Layout from '../../../components/Layout';
 import { useAuth } from '../../../context/AuthProvider';
-import {
-  assignRoleMutation,
-  deleteUserMutation,
-} from '../../../graphql/mutations';
 import { listUsersQuery } from '../../../graphql/queries';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import useDeleteUser from '../../../hooks/mutations/useDeleteUser';
+import useAssignRole from '../../../hooks/mutations/useAssignRole';
 
 const Users: React.FC = () => {
   const { authState } = useAuth();
@@ -30,14 +28,14 @@ const Users: React.FC = () => {
   const { data: usersList, loading: loadingUsersList } =
     useQuery(listUsersQuery);
 
-  const [deleteUser, { error: errorOnDeletingUser }] =
-    useMutation(deleteUserMutation);
-
-  const [assignRole, { error: errorOnAssigningUserRole }] =
-    useMutation(assignRoleMutation);
+  const { deleteUserMutationHandler } = useDeleteUser();
+  const { assignRoleMutationHandler } = useAssignRole();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedUser, setSelectedUser] = useState({
+    role: '',
+    id: '',
+  });
   const [message, setMessage] = useState<{
     toShow: boolean;
     variant: 'success' | 'error' | 'warning';
@@ -48,60 +46,49 @@ const Users: React.FC = () => {
     messageText: '',
   });
 
-  const assignRoleToUserHandler = (userId: string) => {
-    assignRole({
-      variables: {
-        role: selectedRole,
-        assignedBy: authState.userId,
-        assignedUser: userId,
-      },
-      refetchQueries: [{ query: listUsersQuery }],
+  const selectUserHandler = (userId: string) => {
+    setSelectedUser({
+      ...selectedUser,
+      id: userId,
+    });
+  };
+
+  const assignRoleToUserHandler = async () => {
+    const response = await assignRoleMutationHandler({
+      role: selectedUser.role,
+      assignedBy: authState.userId,
+      assignedUser: selectedUser.id,
     });
 
-    setSelectedRole('');
+    setMessage({
+      messageText: response.error ? response.data.message : 'role assigned',
+      toShow: true,
+      variant: response.error ? 'error' : 'success',
+    });
+
+    setSelectedUser({
+      id: '',
+      role: '',
+    });
     setIsModalOpen(false);
-
-    setMessage({
-      toShow: true,
-      variant: 'success',
-      messageText: 'role assigned successfully',
-    });
   };
 
-  errorOnAssigningUserRole &&
+  const deleteUserHandler = async (userId: string) => {
+    const response = await deleteUserMutationHandler({ _id: userId });
     setMessage({
+      messageText: response.error ? response.data.message : 'user deleted',
       toShow: true,
-      variant: 'error',
-      messageText: errorOnAssigningUserRole.message,
-    });
-
-  const deleteUserHandler = (userId: string) => {
-    deleteUser({
-      variables: { _id: userId },
-      refetchQueries: [{ query: listUsersQuery }],
-    });
-    setMessage({
-      ...message,
-      toShow: true,
-      variant: 'success',
-      messageText: 'user deleted successfully',
+      variant: response.error ? 'error' : 'success',
     });
   };
-
-  errorOnDeletingUser &&
-    setMessage({
-      toShow: true,
-      variant: 'error',
-      messageText: errorOnDeletingUser.message,
-    });
 
   return (
     <Layout>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         {loadingUsersList ? (
           <CircularProgress />
         ) : (
-          <Grid item xs={11}>
+          <Grid item xs={11} md={8}>
             {usersList.listUsers.map((user: any) => (
               <Box
                 key={user._id}
@@ -113,7 +100,12 @@ const Users: React.FC = () => {
                   <ListItemText primary={user.email} secondary={user.role} />
                 </ListItem>
                 <Delete onClick={() => deleteUserHandler(user._id)} />
-                <SupervisedUserCircle onClick={() => setIsModalOpen(true)} />
+                <SupervisedUserCircle
+                  onClick={() => {
+                    selectUserHandler(user._id);
+                    setIsModalOpen(true);
+                  }}
+                />
                 <Modal
                   open={isModalOpen}
                   handleClose={() => setIsModalOpen(false)}
@@ -125,10 +117,13 @@ const Users: React.FC = () => {
                     </InputLabel>
                     <Select
                       native
-                      value={selectedRole}
-                      onChange={(e: React.ChangeEvent<any>) =>
-                        setSelectedRole(e.target.value)
-                      }
+                      value={selectedUser.role}
+                      onChange={(e: React.ChangeEvent<any>) => {
+                        setSelectedUser({
+                          ...selectedUser,
+                          role: e.target.value,
+                        });
+                      }}
                       label="Roles"
                     >
                       <option aria-label="None" value="" />
@@ -141,7 +136,7 @@ const Users: React.FC = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => assignRoleToUserHandler(user._id)}
+                    onClick={() => assignRoleToUserHandler()}
                   >
                     Authorize
                   </Button>

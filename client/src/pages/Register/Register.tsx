@@ -14,9 +14,8 @@ import {
 
 import { Link, useHistory } from 'react-router-dom';
 import Message from '../../components/Message';
-import { useMutation } from '@apollo/client';
-import { createUserMutation } from '../../graphql/mutations';
 import { useAuth } from '../../context/AuthProvider';
+import useCreateUser from '../../hooks/mutations/useCreateUser';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,10 +42,9 @@ const Register = () => {
   const history = useHistory();
 
   const { isLoggedIn } = useAuth();
-  const [
-    createUser,
-    { error: errorOnCreateUser, loading: registerUserInProgress },
-  ] = useMutation(createUserMutation);
+
+  const { createUserMutationHandler, isLoading: registerUserInProgress } =
+    useCreateUser();
 
   const [message, setMessage] = useState<{
     toShow: boolean;
@@ -71,29 +69,28 @@ const Register = () => {
     });
   };
 
-  const registerFormHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const registerFormHandler = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
-    createUser({ variables: inputState });
+    const response = await createUserMutationHandler({ ...inputState });
+
+    setMessage({
+      messageText: response.error
+        ? response.data.message
+        : 'registered successfully',
+      toShow: true,
+      variant: response.error ? 'error' : 'success',
+    });
+
     setInputState({
       username: '',
       email: '',
       password: '',
     });
 
-    history.push('/login');
+    // history.push('/login');
   };
-
-  let errorMessage: string | undefined;
-
-  if (!errorOnCreateUser?.networkError) {
-    errorMessage = errorOnCreateUser?.message;
-    console.log(errorOnCreateUser);
-    // setMessage({
-    //   toShow: true,
-    //   variant: 'error',
-    //   messageText: errorOnListingPosts?.message!,
-    // });
-  }
 
   useEffect(() => {
     if (isLoggedIn()) history.push('/');
@@ -101,7 +98,6 @@ const Register = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      {errorMessage && <span>{errorMessage}</span>}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

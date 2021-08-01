@@ -32,10 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Message: React.FC<SnackbarType> = ({ message, setMessage }) => {
   const classes = useStyles();
 
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
-
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;

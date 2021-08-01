@@ -28,14 +28,14 @@ input UserInput {
 export const queries = `
 listUsers: [User!] @hasAuthorisation(roles: [ADMIN])  
 getUserById(_id: ID!): User! 
-login(usernameOrEmail: String!, password: String!): AuthData!
+login(usernameOrEmail: String!, password: String!): AuthData
+
 `;
 
 export const mutations = `
 createUser(user: UserInput): User
   deleteUser(_id: ID!): String @hasAuthorisation(roles: [ADMIN])
   assignRole(role: String! , assignedBy: ID!, assignedUser: ID!): User @hasAuthorisation(roles: [ADMIN])
-
 `;
 
 export const subscriptions = ``;

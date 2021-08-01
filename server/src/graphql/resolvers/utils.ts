@@ -132,3 +132,29 @@ export const likesByCreatorId = async (creatorId: string) => {
     throw error;
   }
 };
+
+export const ValidateEmail = (mail: string) => {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    return true;
+  }
+  return false;
+};
+
+export const checkIfValIsUsernameOrEmail = (usernameOrEmail: string) => {
+  // Check if email
+  if (ValidateEmail(usernameOrEmail)) {
+    //its email address
+    // your code goes here
+    return {
+      type: 'email',
+      email: usernameOrEmail,
+    };
+  } else {
+    //its username
+    // your code goes here
+    return {
+      type: 'username',
+      username: usernameOrEmail,
+    };
+  }
+};

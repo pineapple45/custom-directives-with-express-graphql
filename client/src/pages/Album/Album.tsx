@@ -1,11 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   CssBaseline,
   Grid,
   Typography,
-  makeStyles,
   Container,
   CircularProgress,
   Box,
@@ -17,7 +16,6 @@ import {
   Favorite,
   InsertComment,
 } from '@material-ui/icons';
-// import _ from 'lodash';
 
 import Card from '../../components/Card';
 import Message from '../../components/Message';
@@ -25,55 +23,18 @@ import Layout from '../../components/Layout';
 import Icon from '../../assets/icon.svg';
 import { useMessage } from '../../hooks/useMessage';
 
-import {
-  createLikeMutation,
-  deleteLikeMutation,
-} from '../../graphql/mutations';
-import { listPostsQuery, getPostByIdQuery } from '../../graphql/queries';
+import { listPostsQuery } from '../../graphql/queries';
 import { useAuth } from '../../context/AuthProvider';
+import { commonStyles } from '../utils';
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-  },
-}));
+import useCreateLike from '../../hooks/mutations/useCreateLike';
+import useDeleteLike from '../../hooks/mutations/useDeleteLike';
 
-interface CreateLikeProps {
-  postId: string;
-  creatorId: string;
-}
+const useStyles = commonStyles;
 
 const Album: React.FC = () => {
-  const [createLike, { error: errorOnLikeCreation }] =
-    useMutation<CreateLikeProps>(createLikeMutation);
-  const [deleteLike, { error: errorOnLikeDeletion }] =
-    useMutation<string>(deleteLikeMutation);
+  const { createLikeMutationHandler } = useCreateLike();
+  const { deleteLikeMutationHandler } = useDeleteLike();
   const {
     loading: loadingPosts,
     error: errorOnListingPosts,
@@ -83,7 +44,7 @@ const Album: React.FC = () => {
     errorPolicy: 'all',
   });
 
-  const { authState, isLoggedIn } = useAuth();
+  const { authState } = useAuth();
 
   const [message, setMessage] = useMessage({
     toShow: false,
@@ -94,51 +55,31 @@ const Album: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const addLikeHandler = (postId: string) => {
-    if (!isLoggedIn()) {
-      setMessage({
-        toShow: true,
-        variant: 'error',
-        messageText: 'Please Login to interact with posts',
-      });
-      return;
-    }
+  const addLikeHandler = async (postId: string) => {
+    const response = await createLikeMutationHandler(
+      { postId: postId, creatorId: authState.userId },
+      { postId }
+    );
 
-    createLike({
-      variables: { postId: postId, creatorId: authState.userId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: postId } }],
-    });
-
-    errorOnLikeCreation &&
-      setMessage({
-        toShow: true,
-        variant: 'error',
-        messageText: errorOnLikeCreation.message,
-      });
-  };
-
-  const removeLikeHandler = (likeId: string, postId: string) => {
-    if (!isLoggedIn()) {
-      setMessage({
-        toShow: true,
-        variant: 'error',
-        messageText: 'Please Login to interact with posts',
-      });
-      return;
-    }
-
-    deleteLike({
-      variables: { _id: likeId },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: postId } }],
-    });
-  };
-
-  errorOnLikeDeletion &&
     setMessage({
-      toShow: true,
+      messageText: response.error && response.data.message,
+      toShow: response.error && true,
       variant: 'error',
-      messageText: errorOnLikeDeletion.message,
     });
+  };
+
+  const removeLikeHandler = async (likeId: string, postId: string) => {
+    const response = await deleteLikeMutationHandler(
+      { _id: likeId },
+      { postId }
+    );
+
+    setMessage({
+      messageText: response.error && response.data.message,
+      toShow: response.error && true,
+      variant: 'error',
+    });
+  };
 
   const addCommentHandler = (postId: string) => {
     history.push(`/post/${postId}`);

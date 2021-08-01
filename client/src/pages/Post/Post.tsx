@@ -14,12 +14,12 @@ import Layout from '../../components/Layout';
 import Message from '../../components/Message';
 import { useMessage } from '../../hooks/useMessage';
 import { getPostByIdQuery } from '../../graphql/queries';
-import { createCommentMutation } from '../../graphql/mutations';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useAuth } from '../../context/AuthProvider';
+import useCreateComment from '../../hooks/mutations/useCreateComment';
 
 const Post = () => {
-  const { isLoggedIn, authState } = useAuth();
+  const { authState } = useAuth();
   const { id }: { id: string } = useParams();
 
   const { loading: loadingPostById, data: postById } = useQuery(
@@ -27,9 +27,8 @@ const Post = () => {
     { variables: { _id: id } }
   );
 
-  const [createComment, { loading: commentAdditionInProgress }] = useMutation(
-    createCommentMutation
-  );
+  const { createCommentMutationHandler, isLoading: commentAdditionInProgress } =
+    useCreateComment();
 
   const [comment, setComment] = useState('');
   const [message, setMessage] = useMessage({
@@ -38,23 +37,20 @@ const Post = () => {
     variant: 'success',
   });
 
-  const postCommentHandler = () => {
-    if (!isLoggedIn()) {
-      setMessage({
-        messageText: 'Please login to interact with posts',
-        toShow: true,
-        variant: 'error',
-      });
-      return;
-    }
-
-    createComment({
-      variables: {
+  const postCommentHandler = async () => {
+    const response = await createCommentMutationHandler(
+      {
         text: comment,
         creatorId: authState.userId,
         postId: id,
       },
-      refetchQueries: [{ query: getPostByIdQuery, variables: { _id: id } }],
+      { postId: id }
+    );
+
+    setMessage({
+      messageText: response.error ? response.data.message : 'comment added',
+      toShow: true,
+      variant: response.error ? 'error' : 'success',
     });
   };
 
