@@ -89,7 +89,7 @@ const Register = () => {
       password: '',
     });
 
-    // history.push('/login');
+    history.push('/login');
   };
 
   useEffect(() => {
@@ -122,6 +122,7 @@ const Register = () => {
                 type="text"
                 id="username"
                 onChange={inputChangeHandler}
+                autoComplete="off"
               />
             </Grid>
             <Grid item xs={12}>
@@ -133,7 +134,7 @@ const Register = () => {
                 label="Email Address"
                 name="email"
                 type="email"
-                autoComplete="email"
+                autoComplete="off"
                 onChange={inputChangeHandler}
               />
             </Grid>

@@ -100,10 +100,6 @@ const Login = () => {
     if (isLoggedIn()) history.push('/');
   }, [history, isLoggedIn]);
 
-  useEffect(() => {
-    if (isLoggedIn()) history.push('/');
-  }, [isLoggedIn, history]);
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -123,7 +119,7 @@ const Login = () => {
             id="email"
             label="Enter Username or Email"
             name="usernameOrEmail"
-            autoComplete="text"
+            autoComplete="off"
             autoFocus
             onChange={inputChangeHandler}
           />

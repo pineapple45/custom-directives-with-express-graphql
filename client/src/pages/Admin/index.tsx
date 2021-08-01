@@ -222,6 +222,7 @@ const Admin: React.FC = () => {
                   label="Post Title"
                   name="title"
                   autoFocus
+                  autoComplete="off"
                   onChange={inputChangeHandler}
                 />
                 <br />
@@ -232,6 +233,7 @@ const Admin: React.FC = () => {
                   id="image-link"
                   label="Image Link"
                   name="image"
+                  autoComplete="off"
                   autoFocus
                   onChange={inputChangeHandler}
                 />
@@ -244,6 +246,7 @@ const Admin: React.FC = () => {
                   label="Post Description"
                   name="description"
                   autoFocus
+                  autoComplete="off"
                   multiline
                   rows={4}
                   onChange={inputChangeHandler}
