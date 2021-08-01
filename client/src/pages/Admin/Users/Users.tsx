@@ -25,8 +25,10 @@ import useAssignRole from '../../../hooks/mutations/useAssignRole';
 const Users: React.FC = () => {
   const { authState } = useAuth();
 
-  const { data: usersList, loading: loadingUsersList } =
-    useQuery(listUsersQuery);
+  const { data: usersList, loading: loadingUsersList } = useQuery(
+    listUsersQuery,
+    { fetchPolicy: 'network-only' }
+  );
 
   const { deleteUserMutationHandler } = useDeleteUser();
   const { assignRoleMutationHandler } = useAssignRole();
