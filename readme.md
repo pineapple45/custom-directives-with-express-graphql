@@ -1,8 +1,8 @@
 #### Hashnode Blog Post Article series
 
-- Custom directives with express-graphql [ part-1 ]
-- Custom directives with express-graphql [ part-2 ]
-- Custom directives with express-graphql [ part-3 ]
+- Custom directives with express-graphql [part-1](https://pineapple45.hashnode.dev/custom-directives-with-express-graphql-part-1)
+- Custom directives with express-graphql [part-2](https://pineapple45.hashnode.dev/custom-directives-with-express-graphql-part-2)
+- Custom directives with express-graphql [part-3](https://pineapple45.hashnode.dev/custom-directives-with-express-graphql-part-3)
 
 🌐 Live preview: [Link](https://pineapple45.github.io/custom-directives-with-express-graphql/)
 
@@ -33,32 +33,32 @@ I am using React as my frontend frameworks but you can easily use any other fron
 
 1. Home Page
 
-   [Home-page](./screenshots/admin-homepage.png)
+   ![Home-page](./screenshots/admin-homepage.png)
 
 2. Login Form
 
-   [Login-form](./screenshots/login-form.png)
+   ![Login-form](./screenshots/login-form.png)
 
 3. Register Form
 
-   [Register-form](./screenshots/register-form.png)
+   ![Register-form](./screenshots/register-form.png)
 
 4. Admin Home Page
 
-   [Admin-form](./screenshots/admin-homepage.png)
+   ![Admin-form](./screenshots/admin-homepage.png)
 
 5. User List
 
-   [User-list](./screenshots/user%20list.png)
+   ![User-list](./screenshots/user%20list.png)
 
 6. Posts display
 
-   [Photos-display](./screenshots/post.png)
+   ![Photos-display](./screenshots/post.png)
 
 7. Role selection
 
-   [Role-selection](./screenshots/role-selection.png)
+   ![Role-selection](./screenshots/role-selection.png)
 
 8. Deployment workflow
 
-   [deployment-workflow](./screenshots/deployment-workflow.png)
+   ![deployment-workflow](./screenshots/deployment-workflow.png)
